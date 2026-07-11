@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FuelFinder WA</title>
+<title>FuelSave WA</title>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -41,6 +41,8 @@
   .ff-table td { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
   .ff-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
   .ff-net td { font-weight: 600; }
+  .ff-disclaimer { font-size: 11px; line-height: 1.5; color: #888; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 12px 14px; margin-top: 8px; }
+  .ff-disclaimer strong { color: #666; }
 </style>
 </head>
 <body>
@@ -48,9 +50,14 @@
 <script type="text/babel">
 const { useState, useCallback } = React;
 
-// Points at the backend you're already running. If you deploy the backend,
-// change this one line to its URL.
-const API = "https://fuelsaver-api.onrender.com/";
+// Backend URL. Automatically uses localhost during local development, and your
+// deployed Render backend when running on the live site. After deploying the
+// backend to Render, replace the production URL below with your real one
+// (e.g. "https://fuelsaver-api.onrender.com").
+const API =
+  location.hostname === "localhost" || location.hostname === "127.0.0.1"
+    ? "http://localhost:8000"
+    : "https://fuelsaver-api.onrender.com";
 
 // Product codes verified empirically against the live FuelWatch RSS feed
 // (the numeric RSS codes do NOT match the website dropdown order).
@@ -203,7 +210,7 @@ function FuelFinder() {
   return (
     <div className="ff">
       <div className="ff-head">
-        <h1>FuelFinder WA</h1>
+        <h1>FuelSave WA</h1>
         <p>Is the cheapest pump actually worth the drive?</p>
       </div>
 
@@ -290,6 +297,17 @@ function FuelFinder() {
           <p className="ff-hint">Compared {result.count} stations near {suburb}. Routes via OSRM.</p>
         </div>
       )}
+
+      <div className="ff-disclaimer">
+        <strong>Disclaimer:</strong> Fuel prices and station information are sourced
+        from the FuelWatch WA website (fuelwatch.wa.gov.au) and are provided for
+        general guidance only. Prices update daily and may not reflect the exact
+        amount charged at the pump. Estimated distances and travel times are
+        approximate and will vary with time of day, traffic, roadworks, and the
+        route taken. FuelSave WA is an independent tool and is not affiliated with,
+        endorsed by, or operated by FuelWatch WA or the Government of Western Australia.
+        Always confirm prices at the station before purchasing.
+      </div>
     </div>
   );
 }
