@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: fuelsaver-api
+    runtime: python
+    # Free tier: sleeps after ~15 min idle, wakes in ~30s on next request.
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # Render provides $PORT; uvicorn must bind to it and to 0.0.0.0.
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
