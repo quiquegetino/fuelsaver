@@ -76,6 +76,16 @@ const ECONOMY_DEFAULTS = {
   1: 8.5, 2: 6.5, 3: 8.5, 4: 6.5, 5: 8.7, 6: 8.5,
 };
 
+// Maps a FuelWatch product code to the vehicle fuel category used for economy
+// lookup. Both diesel products -> Diesel variants; all petrol-family products
+// (ULP/PULP/98) -> Petrol (which also covers hybrids). LPG/E10 has no clean
+// vehicle category here, so it falls back to no filter.
+function fuelCategoryForProduct(code) {
+  if (code === 2 || code === 4) return "Diesel";
+  if (code === 1 || code === 3 || code === 6) return "Petrol";
+  return null; // LPG/E10 (5) — don't filter
+}
+
 async function api(path, params) {
   const qs = new URLSearchParams(params).toString();
   let res;
@@ -147,10 +157,18 @@ function FuelFinder() {
     setVehicle((v) => ({ ...v, year }));
     setVSummary(null);
     if (!year) return;
-    api("/api/vehicle/variants", { make: vehicle.make, model: vehicle.model, year })
+    fetchVariantsAndFill(vehicle.make, vehicle.model, year, product);
+  };
+
+  // Shared helper: fetch variants filtered by the selected fuel category and
+  // auto-fill the economy field with that category's average.
+  const fetchVariantsAndFill = (make, model, year, prod) => {
+    const cat = fuelCategoryForProduct(prod);
+    const params = { make, model, year };
+    if (cat) params.fuel_category = cat;
+    api("/api/vehicle/variants", params)
       .then((data) => {
         setVSummary(data.summary);
-        // Auto-fill L/100km with the model-year average (user can override).
         if (data.summary && data.summary.avg > 0) {
           setLPer100(data.summary.avg);
           setEconomyAuto(true);
@@ -164,7 +182,14 @@ function FuelFinder() {
 
   const onProductChange = (code) => {
     setProduct(code);
-    if (ECONOMY_DEFAULTS[code]) setLPer100(ECONOMY_DEFAULTS[code]);
+    // If a full vehicle is already chosen, re-fetch its economy for the new
+    // fuel category so the figure always matches the selected fuel. Otherwise
+    // fall back to the generic per-fuel default.
+    if (vehicle.make && vehicle.model && vehicle.year) {
+      fetchVariantsAndFill(vehicle.make, vehicle.model, vehicle.year, code);
+    } else if (ECONOMY_DEFAULTS[code]) {
+      setLPer100(ECONOMY_DEFAULTS[code]);
+    }
   };
 
   const locate = useCallback(() => {
@@ -315,9 +340,12 @@ function FuelFinder() {
           </div>
           {vSummary && (
             <p className="ff-hint">
-              Manufacturer combined consumption for this model-year ranges{" "}
-              <strong>{vSummary.min}–{vSummary.max} L/100km</strong> across variants
-              (avg {vSummary.avg}). We've set the figure below to the average —
+              Manufacturer combined consumption for this model-year
+              {vSummary.basedOn && vSummary.basedOn !== "all fuel types"
+                ? ` (${vSummary.basedOn} variants)` : ""}
+              {" "}ranges <strong>{vSummary.min}–{vSummary.max} L/100km</strong>
+              {vSummary.variantCount > 1 ? ` across ${vSummary.variantCount} variants` : ""}
+              {" "}(avg {vSummary.avg}). We've set the figure below to the average —
               adjust it to your exact variant if you know it.
             </p>
           )}

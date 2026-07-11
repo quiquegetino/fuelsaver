@@ -305,11 +305,18 @@ def vehicle_years(make: str = Query(...), model: str = Query(...)):
 
 
 @app.get("/api/vehicle/variants")
-def vehicle_variants(make: str = Query(...), model: str = Query(...), year: int = Query(...)):
+def vehicle_variants(
+    make: str = Query(...),
+    model: str = Query(...),
+    year: int = Query(...),
+    fuel_category: str = Query(None),
+):
     """
     Variants for a specific make+model+year, each with its combined L/100km.
-    Also returns the min/max/avg across variants so the frontend can show a
-    range and a sensible default without forcing a variant choice.
+    If fuel_category is given (e.g. "Diesel" or "Petrol"), only variants of that
+    category are used for the min/max/avg summary — so a diesel search doesn't
+    average in petrol variants. Petrol category also includes Hybrid, since
+    hybrids run on petrol. All variants are still returned for display.
     """
     matches = [
         v for v in VEHICLES
@@ -317,13 +324,30 @@ def vehicle_variants(make: str = Query(...), model: str = Query(...), year: int 
     ]
     if not matches:
         raise HTTPException(404, "No data for that vehicle.")
-    values = [v["combined_l100km"] for v in matches if v["combined_l100km"] > 0]
+
+    # Decide which variants feed the economy summary.
+    def in_category(vft):
+        if not fuel_category:
+            return True
+        cat = fuel_category.lower()
+        vft = vft.lower()
+        if cat == "diesel":
+            return "diesel" in vft
+        if cat == "petrol":
+            # Petrol-family fuels (ULP/PULP/98) power petrol and hybrid cars.
+            return vft in ("petrol", "hybrid")
+        return cat in vft
+
+    summary_variants = [v for v in matches if in_category(v["fuel_type"])]
+    values = [v["combined_l100km"] for v in summary_variants if v["combined_l100km"] > 0]
     summary = None
     if values:
         summary = {
             "min": min(values),
             "max": max(values),
             "avg": round(sum(values) / len(values), 1),
+            "basedOn": fuel_category or "all fuel types",
+            "variantCount": len(values),
         }
     return {
         "variants": [
