@@ -1,0 +1,131 @@
+make,model,year,variant,fuel_type,combined_l100km
+Toyota,Corolla,2018,1.8 Petrol CVT,Petrol,6.1
+Toyota,Corolla,2018,1.8 Hybrid,Hybrid,4.2
+Toyota,Corolla,2020,2.0 Petrol CVT,Petrol,6.0
+Toyota,Corolla,2020,1.8 Hybrid,Hybrid,4.2
+Toyota,Corolla,2022,2.0 Petrol CVT,Petrol,6.0
+Toyota,Corolla,2022,1.8 Hybrid,Hybrid,4.0
+Toyota,Camry,2018,2.5 Petrol,Petrol,7.8
+Toyota,Camry,2018,2.5 Hybrid,Hybrid,4.5
+Toyota,Camry,2021,2.5 Petrol,Petrol,7.8
+Toyota,Camry,2021,2.5 Hybrid,Hybrid,4.2
+Toyota,RAV4,2019,2.0 Petrol 2WD,Petrol,6.5
+Toyota,RAV4,2019,2.5 Hybrid AWD,Hybrid,4.8
+Toyota,RAV4,2021,2.0 Petrol 2WD,Petrol,6.5
+Toyota,RAV4,2021,2.5 Hybrid AWD,Hybrid,4.8
+Toyota,RAV4,2023,2.5 Hybrid AWD,Hybrid,4.7
+Toyota,HiLux,2018,2.8 Diesel 4x4,Diesel,8.5
+Toyota,HiLux,2020,2.8 Diesel 4x4,Diesel,7.9
+Toyota,HiLux,2022,2.8 Diesel 4x4,Diesel,7.9
+Toyota,HiLux,2022,2.4 Diesel 4x2,Diesel,7.1
+Toyota,LandCruiser,2020,4.5 V8 Diesel,Diesel,9.5
+Toyota,LandCruiser,2022,3.3 V6 Diesel,Diesel,8.9
+Toyota,Prado,2019,2.8 Diesel,Diesel,7.9
+Toyota,Prado,2022,2.8 Diesel,Diesel,7.9
+Toyota,Yaris,2020,1.5 Petrol,Petrol,4.9
+Toyota,Yaris,2020,1.5 Hybrid,Hybrid,3.3
+Toyota,Kluger,2021,3.5 V6 AWD,Petrol,8.7
+Toyota,Kluger,2021,2.5 Hybrid AWD,Hybrid,5.6
+Mazda,Mazda3,2018,2.0 Petrol,Petrol,5.8
+Mazda,Mazda3,2020,2.0 Petrol,Petrol,6.2
+Mazda,Mazda3,2020,2.5 Petrol,Petrol,6.6
+Mazda,Mazda3,2022,2.0 Petrol,Petrol,6.2
+Mazda,CX-5,2018,2.0 Petrol 2WD,Petrol,6.9
+Mazda,CX-5,2018,2.5 Petrol AWD,Petrol,7.4
+Mazda,CX-5,2018,2.2 Diesel AWD,Diesel,5.7
+Mazda,CX-5,2021,2.5 Petrol AWD,Petrol,7.4
+Mazda,CX-5,2021,2.2 Diesel AWD,Diesel,6.0
+Mazda,CX-5,2023,2.5 Petrol AWD,Petrol,7.4
+Mazda,CX-3,2019,2.0 Petrol,Petrol,6.3
+Mazda,CX-3,2021,2.0 Petrol,Petrol,6.3
+Mazda,CX-30,2020,2.0 Petrol,Petrol,6.5
+Mazda,CX-30,2022,2.0 Petrol,Petrol,6.5
+Mazda,BT-50,2021,3.0 Diesel 4x4,Diesel,8.0
+Mazda,Mazda6,2019,2.5 Petrol,Petrol,6.6
+Ford,Ranger,2018,3.2 Diesel 4x4,Diesel,8.9
+Ford,Ranger,2020,2.0 Bi-Turbo Diesel 4x4,Diesel,7.4
+Ford,Ranger,2022,2.0 Bi-Turbo Diesel 4x4,Diesel,7.6
+Ford,Ranger,2023,3.0 V6 Diesel 4x4,Diesel,8.4
+Ford,Everest,2020,2.0 Bi-Turbo Diesel 4x4,Diesel,7.1
+Ford,Everest,2023,3.0 V6 Diesel 4x4,Diesel,8.5
+Ford,Escape,2020,2.0 Petrol AWD,Petrol,8.6
+Ford,Puma,2021,1.0 Petrol,Petrol,6.3
+Ford,Focus,2019,1.5 Petrol,Petrol,6.4
+Hyundai,i30,2018,2.0 Petrol,Petrol,7.4
+Hyundai,i30,2018,1.6 Diesel,Diesel,4.7
+Hyundai,i30,2020,2.0 Petrol,Petrol,7.4
+Hyundai,i30,2022,2.0 Petrol,Petrol,7.4
+Hyundai,Tucson,2019,2.0 Petrol 2WD,Petrol,7.9
+Hyundai,Tucson,2019,1.6 Diesel AWD,Diesel,6.4
+Hyundai,Tucson,2022,2.0 Petrol 2WD,Petrol,8.1
+Hyundai,Tucson,2022,1.6 Turbo Petrol AWD,Petrol,7.2
+Hyundai,Kona,2020,2.0 Petrol,Petrol,6.7
+Hyundai,Kona,2020,1.6 Turbo Petrol AWD,Petrol,6.9
+Hyundai,Kona,2022,2.0 Petrol,Petrol,6.6
+Hyundai,Santa Fe,2021,2.2 Diesel AWD,Diesel,6.1
+Hyundai,Santa Fe,2021,3.5 V6 Petrol AWD,Petrol,10.5
+Hyundai,i20,2021,1.2 Petrol,Petrol,6.2
+Kia,Cerato,2019,2.0 Petrol,Petrol,7.4
+Kia,Cerato,2021,2.0 Petrol,Petrol,7.4
+Kia,Sportage,2019,2.0 Petrol 2WD,Petrol,7.9
+Kia,Sportage,2019,2.0 Diesel AWD,Diesel,6.8
+Kia,Sportage,2022,2.0 Petrol 2WD,Petrol,8.1
+Kia,Sportage,2022,1.6 Diesel AWD,Diesel,6.3
+Kia,Sorento,2021,2.2 Diesel AWD,Diesel,6.1
+Kia,Sorento,2021,3.5 V6 Petrol AWD,Petrol,9.7
+Kia,Seltos,2020,2.0 Petrol,Petrol,6.8
+Kia,Seltos,2022,2.0 Petrol,Petrol,6.8
+Kia,Picanto,2021,1.25 Petrol,Petrol,5.8
+Kia,Rio,2020,1.4 Petrol,Petrol,5.6
+Mitsubishi,Triton,2019,2.4 Diesel 4x4,Diesel,7.6
+Mitsubishi,Triton,2021,2.4 Diesel 4x4,Diesel,8.6
+Mitsubishi,Triton,2023,2.4 Diesel 4x4,Diesel,7.7
+Mitsubishi,Outlander,2019,2.4 Petrol 2WD,Petrol,7.2
+Mitsubishi,Outlander,2022,2.5 Petrol AWD,Petrol,7.5
+Mitsubishi,Outlander,2022,2.4 PHEV AWD,Plug-in Hybrid,1.5
+Mitsubishi,ASX,2020,2.0 Petrol,Petrol,7.6
+Mitsubishi,ASX,2022,2.0 Petrol,Petrol,7.6
+Mitsubishi,Pajero Sport,2021,2.4 Diesel 4x4,Diesel,8.0
+Mitsubishi,Eclipse Cross,2021,1.5 Turbo Petrol,Petrol,7.7
+Nissan,Navara,2019,2.3 Diesel 4x4,Diesel,7.0
+Nissan,Navara,2021,2.3 Diesel 4x4,Diesel,8.1
+Nissan,X-Trail,2019,2.5 Petrol 2WD,Petrol,7.9
+Nissan,X-Trail,2022,2.5 Petrol AWD,Petrol,7.8
+Nissan,Qashqai,2020,2.0 Petrol,Petrol,6.9
+Nissan,Qashqai,2023,1.3 Turbo Petrol,Petrol,6.1
+Nissan,Patrol,2021,5.6 V8 Petrol,Petrol,14.4
+Volkswagen,Golf,2019,1.4 TSI Petrol,Petrol,5.4
+Volkswagen,Golf,2021,1.4 TSI Petrol,Petrol,5.5
+Volkswagen,Tiguan,2020,2.0 TSI Petrol AWD,Petrol,8.1
+Volkswagen,Tiguan,2020,2.0 TDI Diesel AWD,Diesel,6.2
+Volkswagen,Amarok,2021,3.0 V6 Diesel 4x4,Diesel,8.4
+Volkswagen,Polo,2020,1.0 TSI Petrol,Petrol,5.0
+Subaru,Forester,2019,2.5 Petrol AWD,Petrol,7.4
+Subaru,Forester,2022,2.5 Petrol AWD,Petrol,7.4
+Subaru,Outback,2021,2.5 Petrol AWD,Petrol,7.3
+Subaru,XV,2020,2.0 Petrol AWD,Petrol,7.0
+Subaru,Impreza,2019,2.0 Petrol AWD,Petrol,7.2
+Honda,Civic,2019,1.5 Turbo Petrol,Petrol,6.0
+Honda,Civic,2022,1.5 Turbo Petrol,Petrol,6.3
+Honda,CR-V,2019,1.5 Turbo Petrol 2WD,Petrol,7.3
+Honda,CR-V,2022,1.5 Turbo Petrol 2WD,Petrol,7.3
+Honda,HR-V,2021,1.8 Petrol,Petrol,6.9
+Honda,HR-V,2022,1.5 Hybrid,Hybrid,4.3
+Isuzu,D-Max,2020,3.0 Diesel 4x4,Diesel,8.0
+Isuzu,D-Max,2022,3.0 Diesel 4x4,Diesel,8.0
+Isuzu,MU-X,2021,3.0 Diesel 4x4,Diesel,8.3
+Isuzu,MU-X,2023,3.0 Diesel 4x4,Diesel,8.3
+Holden,Commodore,2018,3.6 V6 Petrol,Petrol,9.3
+Holden,Colorado,2019,2.8 Diesel 4x4,Diesel,8.7
+Tesla,Model 3,2021,Standard Range RWD,Electric,0.0
+Tesla,Model 3,2022,Long Range AWD,Electric,0.0
+Tesla,Model Y,2022,Rear-Wheel Drive,Electric,0.0
+MG,MG3,2021,1.5 Petrol,Petrol,6.7
+MG,ZS,2021,1.5 Petrol,Petrol,7.1
+MG,ZS,2022,1.0 Turbo Petrol,Petrol,6.7
+MG,HS,2021,1.5 Turbo Petrol,Petrol,7.3
+GWM,Haval Jolion,2022,1.5 Turbo Petrol,Petrol,7.1
+GWM,Ute,2022,2.0 Diesel 4x4,Diesel,9.4
+Suzuki,Swift,2020,1.2 Petrol,Petrol,4.8
+Suzuki,Vitara,2021,1.4 Turbo Petrol,Petrol,6.2
+Suzuki,Jimny,2021,1.5 Petrol 4x4,Petrol,6.4

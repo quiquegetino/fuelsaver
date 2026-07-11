@@ -23,9 +23,37 @@ from fastapi.middleware.cors import CORSMiddleware
 from math import radians, sin, cos, asin, sqrt
 import xml.etree.ElementTree as ET
 import asyncio
+import csv
+import os
 import httpx
 
 app = FastAPI(title="FuelFinder WA API")
+
+# ---------------------------------------------------------------------------
+# Vehicle fuel-economy data (Green Vehicle Guide-style: manufacturer combined
+# L/100km by make/model/year/variant). Loaded once at startup from CSV.
+# To expand coverage, replace data/vehicles.csv with a fuller export — the
+# columns are: make,model,year,variant,fuel_type,combined_l100km
+# ---------------------------------------------------------------------------
+VEHICLES = []
+
+def _load_vehicles():
+    path = os.path.join(os.path.dirname(__file__), "data", "vehicles.csv")
+    rows = []
+    try:
+        with open(path, newline="", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                try:
+                    r["year"] = int(r["year"])
+                    r["combined_l100km"] = float(r["combined_l100km"])
+                except (ValueError, KeyError):
+                    continue
+                rows.append(r)
+    except FileNotFoundError:
+        pass
+    return rows
+
+VEHICLES = _load_vehicles()
 
 app.add_middleware(
     CORSMiddleware,
@@ -253,6 +281,58 @@ async def route(from_: str = Query(..., alias="from"), to: str = Query(...)):
     except (httpx.HTTPError, KeyError, IndexError):
         km = _haversine(f_lat, f_lng, t_lat, t_lng) * 1.35
         return {"distanceKm": km, "durationMin": km / 40 * 60, "estimated": True}
+
+
+@app.get("/api/vehicle/makes")
+def vehicle_makes():
+    """All makes, sorted."""
+    return sorted({v["make"] for v in VEHICLES})
+
+
+@app.get("/api/vehicle/models")
+def vehicle_models(make: str = Query(...)):
+    """Models for a make, sorted."""
+    return sorted({v["model"] for v in VEHICLES if v["make"] == make})
+
+
+@app.get("/api/vehicle/years")
+def vehicle_years(make: str = Query(...), model: str = Query(...)):
+    """Years for a make+model, newest first."""
+    return sorted(
+        {v["year"] for v in VEHICLES if v["make"] == make and v["model"] == model},
+        reverse=True,
+    )
+
+
+@app.get("/api/vehicle/variants")
+def vehicle_variants(make: str = Query(...), model: str = Query(...), year: int = Query(...)):
+    """
+    Variants for a specific make+model+year, each with its combined L/100km.
+    Also returns the min/max/avg across variants so the frontend can show a
+    range and a sensible default without forcing a variant choice.
+    """
+    matches = [
+        v for v in VEHICLES
+        if v["make"] == make and v["model"] == model and v["year"] == year
+    ]
+    if not matches:
+        raise HTTPException(404, "No data for that vehicle.")
+    values = [v["combined_l100km"] for v in matches if v["combined_l100km"] > 0]
+    summary = None
+    if values:
+        summary = {
+            "min": min(values),
+            "max": max(values),
+            "avg": round(sum(values) / len(values), 1),
+        }
+    return {
+        "variants": [
+            {"variant": v["variant"], "fuelType": v["fuel_type"],
+             "combined": v["combined_l100km"]}
+            for v in matches
+        ],
+        "summary": summary,
+    }
 
 
 @app.get("/")

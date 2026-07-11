@@ -117,6 +117,47 @@ function FuelFinder() {
   const [fillLitres, setFillLitres] = useState(45);
   const [radiusKm, setRadiusKm] = useState(20);
   const [vehicle, setVehicle] = useState({ make: "", model: "", year: "" });
+  const [vMakes, setVMakes] = useState([]);
+  const [vModels, setVModels] = useState([]);
+  const [vYears, setVYears] = useState([]);
+  const [vSummary, setVSummary] = useState(null); // {min,max,avg} for chosen year
+  const [economyAuto, setEconomyAuto] = useState(false); // was L/100km auto-filled?
+
+  // Load makes once on mount.
+  React.useEffect(() => {
+    api("/api/vehicle/makes").then(setVMakes).catch(() => {});
+  }, []);
+
+  // When make changes, load its models and reset downstream.
+  const onMakeChange = (make) => {
+    setVehicle({ make, model: "", year: "" });
+    setVModels([]); setVYears([]); setVSummary(null);
+    if (make) api("/api/vehicle/models", { make }).then(setVModels).catch(() => {});
+  };
+
+  // When model changes, load its years and reset downstream.
+  const onModelChange = (model) => {
+    setVehicle((v) => ({ ...v, model, year: "" }));
+    setVYears([]); setVSummary(null);
+    if (model) api("/api/vehicle/years", { make: vehicle.make, model }).then(setVYears).catch(() => {});
+  };
+
+  // When year changes, fetch variants + summary and auto-fill economy.
+  const onYearChange = (year) => {
+    setVehicle((v) => ({ ...v, year }));
+    setVSummary(null);
+    if (!year) return;
+    api("/api/vehicle/variants", { make: vehicle.make, model: vehicle.model, year })
+      .then((data) => {
+        setVSummary(data.summary);
+        // Auto-fill L/100km with the model-year average (user can override).
+        if (data.summary && data.summary.avg > 0) {
+          setLPer100(data.summary.avg);
+          setEconomyAuto(true);
+        }
+      })
+      .catch(() => {});
+  };
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
@@ -237,9 +278,9 @@ function FuelFinder() {
               <input type="number" value={fillLitres} min={1}
                 onChange={(e) => setFillLitres(Number(e.target.value))} />
             </label>
-            <label>Economy (L/100km)
+            <label>Economy (L/100km){economyAuto ? " · auto" : ""}
               <input type="number" step="0.1" value={lPer100}
-                onChange={(e) => setLPer100(Number(e.target.value))} />
+                onChange={(e) => { setLPer100(Number(e.target.value)); setEconomyAuto(false); }} />
             </label>
             <label>Search radius (km)
               <input type="number" step="1" min={1} value={radiusKm}
@@ -252,19 +293,37 @@ function FuelFinder() {
           <span className="ff-num">3</span>
           <div className="ff-step-body ff-grid">
             <label>Make
-              <input value={vehicle.make} placeholder="Toyota"
-                onChange={(e) => setVehicle({ ...vehicle, make: e.target.value })} />
+              <select value={vehicle.make} onChange={(e) => onMakeChange(e.target.value)}>
+                <option value="">Select make…</option>
+                {vMakes.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
             </label>
             <label>Model
-              <input value={vehicle.model} placeholder="Corolla"
-                onChange={(e) => setVehicle({ ...vehicle, model: e.target.value })} />
+              <select value={vehicle.model} disabled={!vehicle.make}
+                onChange={(e) => onModelChange(e.target.value)}>
+                <option value="">{vehicle.make ? "Select model…" : "Pick make first"}</option>
+                {vModels.map((m) => <option key={m} value={m}>{m}</option>)}
+              </select>
             </label>
             <label>Year
-              <input value={vehicle.year} placeholder="2020"
-                onChange={(e) => setVehicle({ ...vehicle, year: e.target.value })} />
+              <select value={vehicle.year} disabled={!vehicle.model}
+                onChange={(e) => onYearChange(e.target.value)}>
+                <option value="">{vehicle.model ? "Select year…" : "Pick model first"}</option>
+                {vYears.map((y) => <option key={y} value={y}>{y}</option>)}
+              </select>
             </label>
           </div>
-          <p className="ff-hint">Make/model/year are captured for a future economy lookup — for now the L/100km field drives the maths.</p>
+          {vSummary && (
+            <p className="ff-hint">
+              Manufacturer combined consumption for this model-year ranges{" "}
+              <strong>{vSummary.min}–{vSummary.max} L/100km</strong> across variants
+              (avg {vSummary.avg}). We've set the figure below to the average —
+              adjust it to your exact variant if you know it.
+            </p>
+          )}
+          {!vMakes.length && (
+            <p className="ff-hint">Vehicle list unavailable — you can still enter L/100km manually below.</p>
+          )}
         </div>
 
         <button className="ff-btn ff-primary" onClick={compare}>Compare cheapest vs closest</button>
@@ -304,9 +363,17 @@ function FuelFinder() {
         general guidance only. Prices update daily and may not reflect the exact
         amount charged at the pump. Estimated distances and travel times are
         approximate and will vary with time of day, traffic, roadworks, and the
-        route taken. FuelSave WA is an independent tool and is not affiliated with,
-        endorsed by, or operated by FuelWatch WA or the Government of Western Australia.
-        Always confirm prices at the station before purchasing.
+        route taken.
+        {" "}Vehicle fuel-consumption figures are the manufacturer's combined
+        laboratory values (based on Green Vehicle Guide / ADR certification data)
+        and are intended only to compare vehicles. Your actual fuel consumption
+        will differ depending on driving habits, load, vehicle condition and
+        maintenance, terrain, weather, and traffic. All savings figures are
+        estimates only.
+        {" "}FuelSave WA is an independent tool and is not affiliated with,
+        endorsed by, or operated by FuelWatch WA, the Green Vehicle Guide, or the
+        Government of Western Australia or Australia. Always confirm prices at the
+        station before purchasing.
       </div>
     </div>
   );
