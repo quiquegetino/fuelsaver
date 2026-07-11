@@ -132,6 +132,7 @@ function FuelFinder() {
   const [vYears, setVYears] = useState([]);
   const [vSummary, setVSummary] = useState(null); // {min,max,avg} for chosen year
   const [economyAuto, setEconomyAuto] = useState(false); // was L/100km auto-filled?
+  const [lpgWarning, setLpgWarning] = useState(false); // LPG selected: economy not reliable
 
   // Load makes once on mount.
   React.useEffect(() => {
@@ -161,8 +162,18 @@ function FuelFinder() {
   };
 
   // Shared helper: fetch variants filtered by the selected fuel category and
-  // auto-fill the economy field with that category's average.
+  // auto-fill the economy field with that category's average. For LPG (code 5)
+  // we have no manufacturer data, so we skip auto-fill and flag a warning
+  // instead — the user must enter their own figure.
   const fetchVariantsAndFill = (make, model, year, prod) => {
+    if (prod === 5) {
+      // LPG: don't auto-fill (data doesn't cover LPG conversions).
+      setLpgWarning(true);
+      setVSummary(null);
+      setEconomyAuto(false);
+      return;
+    }
+    setLpgWarning(false);
     const cat = fuelCategoryForProduct(prod);
     const params = { make, model, year };
     if (cat) params.fuel_category = cat;
@@ -187,8 +198,11 @@ function FuelFinder() {
     // fall back to the generic per-fuel default.
     if (vehicle.make && vehicle.model && vehicle.year) {
       fetchVariantsAndFill(vehicle.make, vehicle.model, vehicle.year, code);
-    } else if (ECONOMY_DEFAULTS[code]) {
-      setLPer100(ECONOMY_DEFAULTS[code]);
+    } else {
+      // No full vehicle selected yet — still flag LPG so the user knows the
+      // economy figure needs manual entry.
+      setLpgWarning(code === 5);
+      if (ECONOMY_DEFAULTS[code]) setLPer100(ECONOMY_DEFAULTS[code]);
     }
   };
 
@@ -338,6 +352,14 @@ function FuelFinder() {
               </select>
             </label>
           </div>
+          {lpgWarning && (
+            <p className="ff-hint" style={{color:"#b26a00"}}>
+              <strong>Note:</strong> Manufacturer fuel-consumption data doesn't cover
+              LPG systems, so we can't auto-fill an economy figure for LPG. LPG
+              vehicles typically use more fuel by volume than petrol (often 20–30%
+              more). Please enter your own L/100km below for an accurate estimate.
+            </p>
+          )}
           {vSummary && (
             <p className="ff-hint">
               Manufacturer combined consumption for this model-year
