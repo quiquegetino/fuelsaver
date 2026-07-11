@@ -1,85 +1,72 @@
-# FuelFinder WA
+# FuelSave WA
 
-Finds the cheapest fuel near you on [FuelWatch](https://www.fuelwatch.wa.gov.au/),
-compares it against the closest station, and tells you whether the cheaper pump
-is actually worth the drive — netting the fuel you'd burn and time you'd spend
-getting there against the saving at the bowser.
+A web app that helps drivers in Western Australia find the cheapest fuel near them — and works out whether the detour to a cheaper station is actually worth it once you factor in the extra distance and your vehicle's fuel economy.
 
-## Why there's a backend
+Live at **[fuelsavewa.com](https://fuelsavewa.com)**.
 
-FuelWatch's RSS feed and the geocoding/routing services don't send CORS headers,
-so a browser can't call them directly. Public CORS proxies don't solve it either:
-they're now either locked to specific dev origins or blocked by FuelWatch itself.
-The fix is a tiny backend that makes those calls server-side, where CORS doesn't
-apply. The browser only ever talks to this backend.
+## What it does
+
+1. Detects your location (or you enter a suburb).
+2. Pulls current fuel prices from **FuelWatch WA**.
+3. Asks your fuel type and, optionally, your car (make → model → year) to estimate consumption.
+4. Finds the **cheapest** station within your chosen radius and the **closest** station.
+5. Calculates the real saving: price difference × fill volume, minus the cost of the extra distance to reach the cheaper station. If the detour costs more than it saves, it tells you it's not worth it.
+
+Coverage spans the full Perth metro area plus regional WA — from Geraldton in the north to Esperance in the south, and the wheatbelt and goldfields in between.
+
+## How it's built
+
+The app is two pieces because FuelWatch, geocoding and routing services don't send CORS headers, so a browser can't call them directly.
+
+- **Backend** — FastAPI (Python), in `backend/main.py`. Makes the FuelWatch, geocoding (Nominatim) and routing (OSRM) calls server-side. Deployed on Render.
+- **Frontend** — a single self-contained `index.html` (React via CDN). Deployed as a Cloudflare Worker.
+
+The API base URL auto-switches: `localhost:8000` in development, the Render URL in production.
+
+### Key endpoints
+
+- `GET /api/geocode`, `GET /api/reverse` — suburb/coordinate lookup
+- `GET /api/fuel`, `GET /api/fuel-metro` — fuel prices (per-suburb and area-wide)
+- `GET /api/route` — road distance between two points
+- `GET /api/vehicle/makes|models|years|variants` — vehicle economy lookup
+
+## Vehicle data
+
+`backend/data/vehicles.csv` holds the fuel-economy figures used to estimate consumption. Columns:
 
 ```
-Browser (React)  ->  Backend (FastAPI)  ->  FuelWatch RSS
-                                         ->  Nominatim (geocoding)
-                                         ->  OSRM (routing)
+make,model,year,variant,fuel_type,combined_l100km
 ```
 
-## Run it
+The dataset is engine-variant based (not trim levels) and combines:
 
-### 1. Backend
+- **Australian data** from the Green Vehicle Guide (manufacturer-certified combined L/100km, 2004+), which takes priority for Australian-market models.
+- **Canadian open data** from Natural Resources Canada (Open Government Licence), filtered to Australian-market makes, covering **1995–2026** and filling gaps the Australian export missed. Note: 1995–2014 Canadian figures are approximate 5-cycle-adjusted values.
+- A curated list of common Australian vehicles (including popular utes across their model generations) to guarantee coverage of high-selling cars.
+
+Fuel-type note: 91/95/98 RON all map to the "Petrol" economy category (octane affects knock resistance, not consumption — the RON choice matters for the price search, not the car's figure). LPG has no manufacturer economy data, so the app asks the user to enter their own L/100km and shows a note explaining why.
+
+## Running locally
+
+Backend:
 
 ```bash
 cd backend
-python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-Check it's up: open http://localhost:8000 — you should see `{"status":"ok"}`.
-Try a live query: http://localhost:8000/api/fuel?product=1&suburb=Bayswater
+Frontend: open `index.html` (it points at `localhost:8000` when run locally).
 
-### 2. Frontend
+## Deploying
 
-The `FuelFinder.jsx` component drops into any Vite + React app. Quick version:
+- **Backend (Render):** push to the connected repo; Render auto-redeploys. Root directory `backend`, start command `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+- **Frontend (Cloudflare Worker):** auto-redeploys on push. Hard-refresh (Ctrl+Shift+R) after a deploy to clear the cache.
 
-```bash
-npm create vite@latest fuelfinder-web -- --template react
-cd fuelfinder-web
-npm install
-# copy FuelFinder.jsx into src/, then import it in App.jsx:
-#   import FuelFinder from "./FuelFinder";
-#   export default () => <FuelFinder />;
-npm run dev
-```
+Updating vehicle data is a data-only change: replace `backend/data/vehicles.csv`, commit and push — no code redeploy needed, though the push does trigger Render to reload.
 
-Open the Vite URL (usually http://localhost:5173). The component defaults to
-`http://localhost:8000` for the API. To point at a deployed backend, add a
-`.env` file with `VITE_API_BASE=https://your-backend.example.com`.
+## Data sources & disclaimer
 
-## API
+Fuel prices are sourced from FuelWatch WA and update daily (tomorrow's prices appear after 2:30pm). Travel times and distances are estimates and don't account for traffic or roadworks. Vehicle consumption figures are manufacturer laboratory values (Green Vehicle Guide / NRCan) and will vary with driving style, load, and vehicle condition; older figures (pre-2015) use a different, less directly comparable test standard.
 
-| Endpoint | Params | Returns |
-|---|---|---|
-| `GET /api/geocode` | `suburb` | `{lat, lng}` |
-| `GET /api/reverse` | `lat`, `lng` | `{suburb}` |
-| `GET /api/fuel` | `product`, `suburb`, `surrounding` | `[{name, brand, address, suburb, price, lat, lng}]` |
-| `GET /api/route` | `from=lat,lng`, `to=lat,lng` | `{distanceKm, durationMin}` |
-
-FuelWatch product codes: 1 = ULP, 2 = PULP 95, 3 = Diesel, 4 = LPG, 5 = PULP 98, 10 = E10.
-
-## How the savings maths works
-
-- **Gross saving** = (closest price − cheapest price) × litres you're putting in
-- **Detour cost** = extra round-trip distance to the cheaper station × your
-  L/100km × the cheaper station's price
-- **Net saving** = gross saving − detour cost
-
-If net saving is negative, the app tells you to stay at the closest station.
-
-## Known limitations / next steps
-
-- **Vehicle economy**: make/model/year are collected but not yet used. The
-  L/100km field drives the maths for now. A future step is mapping vehicle ->
-  economy (a static dataset is more reliable than any free AU vehicle API).
-- **Routing rate limits**: the public OSRM demo server is fine for testing but
-  asks you not to hammer it. For production, self-host OSRM or use a keyed
-  provider (Mapbox, Google, OpenRouteService).
-- **Nominatim usage policy**: max 1 request/second and a valid User-Agent
-  (already set). For volume, self-host or use a paid geocoder.
-- **Caching**: FuelWatch prices change at most daily — cache the feed per
-  suburb to cut requests and speed things up.
+FuelSave WA is an independent tool and is not affiliated with FuelWatch, the Green Vehicle Guide, Natural Resources Canada, or any government body.
