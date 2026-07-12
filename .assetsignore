@@ -1,0 +1,26 @@
+# Files and folders that should NOT be published as part of the frontend site.
+# Wrangler uploads everything in the output directory (repo root) by default,
+# which unintentionally includes the .git folder, the Python backend, and docs.
+# This restricts the deploy to just the static frontend assets.
+
+# Git internals (must never be web-accessible)
+.git
+.git/**
+
+# Python backend (runs on Render, not Cloudflare)
+backend
+backend/**
+
+# Project tooling / docs / config not needed by the frontend
+gvg_scraper.py
+*.py
+*.md
+render.yaml
+DEPLOYMENT.md
+.gitignore
+
+# Wrangler's own generated files
+.wrangler
+.wrangler/**
+wrangler.jsonc
+wrangler.toml
