@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FuelSave WA</title>
+<meta name="description" content="Find the cheapest fuel near you in Western Australia and see if the drive to a cheaper station is actually worth it, based on your car's fuel economy." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Cpath d='M50 20 C50 20 30 46 30 62 a20 20 0 0 0 40 0 C70 46 50 20 50 20 Z' fill='white'/%3E%3C/svg%3E" />
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -268,7 +270,10 @@ function FuelFinder() {
         }),
       })));
 
-      const searchNote = `Cheapest ${(FUEL_PRODUCTS.find((f) => f.code === product) || {}).label || "fuel"} within ${radiusKm} km of you, out of ${fuelResp.withinRadius} stations.`;
+      const fuelLabel = (FUEL_PRODUCTS.find((f) => f.code === product) || {}).label || "fuel";
+      const searchNote = fuelResp.beyondRadius
+        ? `No ${fuelLabel} stations within ${radiusKm} km — showing the nearest ones beyond your radius instead.`
+        : `Cheapest ${fuelLabel} within ${radiusKm} km of you, out of ${fuelResp.withinRadius} stations.`;
 
       const priceDiffCents = closest.price - cheapest.price;
       const fuelSaved = (priceDiffCents / 100) * fillLitres;
@@ -322,8 +327,8 @@ function FuelFinder() {
                 onChange={(e) => { setLPer100(Number(e.target.value)); setEconomyAuto(false); }} />
             </label>
             <label>Search radius (km)
-              <input type="number" step="1" min={1} value={radiusKm}
-                onChange={(e) => setRadiusKm(Number(e.target.value))} />
+              <input type="number" step="5" min={1} max={200} value={radiusKm}
+                onChange={(e) => setRadiusKm(Math.min(200, Number(e.target.value)))} />
             </label>
           </div>
         </div>
