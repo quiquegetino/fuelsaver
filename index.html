@@ -30,6 +30,18 @@
   .ff-status { color: #1a5fa5; font-size: 14px; margin: 12px 0 0; }
   .ff-error { color: #c0392b; font-size: 14px; margin: 12px 0 0; }
   .ff-verdict { font-size: 16px; margin: 0 0 16px; padding: 12px; border-radius: 8px; background: #f5f5f5; }
+  .ff-modes { display: flex; gap: 8px; margin-bottom: 12px; }
+  .ff-mode { flex: 1; height: 40px; border: 1px solid #1a5fa5; background: #fff; color: #1a5fa5; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .ff-mode-on { background: #1a5fa5; color: #fff; }
+  .ff-route-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #eee; }
+  .ff-route-rank { flex: 0 0 26px; height: 26px; border-radius: 50%; background: #1a5fa5; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+  .ff-route-body { flex: 1; }
+  .ff-route-name { font-size: 15px; font-weight: 600; }
+  .ff-route-price { color: #1a5fa5; font-weight: 600; margin-left: 6px; }
+  .ff-route-meta { font-size: 13px; color: #555; margin-top: 2px; }
+  .ff-route-links { margin-top: 6px; display: flex; gap: 12px; }
+  .ff-route-links a { font-size: 13px; color: #1a5fa5; text-decoration: none; font-weight: 500; }
+  .ff-route-links a:hover { text-decoration: underline; }
   .ff-good { background: #eafaf1; color: #1d6e4f; }
   .ff-bad { background: #fdecea; color: #a32d2d; }
   .ff-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
@@ -108,6 +120,11 @@ async function api(path, params) {
 
 const fmtMoney = (n) => "$" + n.toFixed(2);
 const fmtMin = (n) => Math.round(n) + " min";
+// Deep links to open a station in the user's map app of choice.
+const mapsUrl = (s) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`;
+const wazeUrl = (s) =>
+  `https://waze.com/ul?ll=${s.lat},${s.lng}&navigate=yes`;
 
 function StationCard({ title, s }) {
   return (
@@ -135,6 +152,9 @@ function FuelFinder() {
   const [vSummary, setVSummary] = useState(null); // {min,max,avg} for chosen year
   const [economyAuto, setEconomyAuto] = useState(false); // was L/100km auto-filled?
   const [lpgWarning, setLpgWarning] = useState(false); // LPG selected: economy not reliable
+  const [mode, setMode] = useState("near"); // "near" | "route"
+  const [destSuburb, setDestSuburb] = useState(""); // route destination
+  const [routeResult, setRouteResult] = useState(null); // along-route search result
 
   // Load makes once on mount.
   React.useEffect(() => {
@@ -292,6 +312,40 @@ function FuelFinder() {
     } catch (e) { setError(e.message || "Something went wrong."); setLoading(""); }
   }, [origin, suburb, product, fillLitres, lPer100, radiusKm]);
 
+  // Find cheapest fuel along a route from origin to destination.
+  const searchRoute = useCallback(async () => {
+    setError(""); setRouteResult(null);
+    if (!destSuburb) { setError("Enter a destination suburb or town."); return; }
+    try {
+      // Resolve origin: use current location if set, else geocode the suburb.
+      let from = origin;
+      if (!from) {
+        if (!suburb) { setError("Set your starting point — tap \u201CUse my location\u201D or enter a suburb."); return; }
+        setLoading("Locating your start…");
+        from = await api("/api/geocode", { suburb });
+        setOrigin(from);
+      }
+      setLoading("Locating your destination…");
+      const to = await api("/api/geocode", { suburb: destSuburb });
+
+      setLoading("Finding fuel along your route… (this can take a moment)");
+      const resp = await api("/api/fuel-route", {
+        product,
+        from: `${from.lat},${from.lng}`,
+        to: `${to.lat},${to.lng}`,
+        fill_litres: fillLitres,
+        l_per_100km: lPer100,
+        max_detour_km: 5,
+      });
+      if (!resp.stations || !resp.stations.length) {
+        setError(`No fuel stations found within 5 km of your route right now.`);
+        setLoading(""); return;
+      }
+      setRouteResult({ ...resp, from, to });
+      setLoading("");
+    } catch (e) { setError(e.message || "Something went wrong."); setLoading(""); }
+  }, [origin, suburb, destSuburb, product, fillLitres, lPer100]);
+
   return (
     <div className="ff">
       <div className="ff-head">
@@ -299,14 +353,26 @@ function FuelFinder() {
         <p>Is the cheapest pump actually worth the drive?</p>
       </div>
 
+      <div className="ff-modes">
+        <button className={"ff-mode" + (mode === "near" ? " ff-mode-on" : "")}
+          onClick={() => setMode("near")}>Near me</button>
+        <button className={"ff-mode" + (mode === "route" ? " ff-mode-on" : "")}
+          onClick={() => setMode("route")}>Fuel on my route</button>
+      </div>
+
       <div className="ff-card">
         <div className="ff-step">
           <span className="ff-num">1</span>
           <div className="ff-step-body">
             <button className="ff-btn" onClick={locate}>Use my location</button>
-            <input className="ff-input" placeholder="Suburb (e.g. Bayswater)"
+            <input className="ff-input"
+              placeholder={mode === "route" ? "Start suburb (or use my location)" : "Suburb (e.g. Bayswater)"}
               value={suburb} onChange={(e) => setSuburb(e.target.value)} />
             {origin && <span className="ff-coords">{origin.lat.toFixed(4)}, {origin.lng.toFixed(4)}</span>}
+            {mode === "route" && (
+              <input className="ff-input" placeholder="Destination (e.g. Geraldton)"
+                value={destSuburb} onChange={(e) => setDestSuburb(e.target.value)} />
+            )}
           </div>
         </div>
 
@@ -326,7 +392,7 @@ function FuelFinder() {
               <input type="number" step="0.1" value={lPer100}
                 onChange={(e) => { setLPer100(Number(e.target.value)); setEconomyAuto(false); }} />
             </label>
-            <label>Search radius (km)
+            <label style={{display: mode === "route" ? "none" : "block"}}>Search radius (km)
               <input type="number" step="5" min={1} max={200} value={radiusKm}
                 onChange={(e) => setRadiusKm(Math.min(200, Number(e.target.value)))} />
             </label>
@@ -381,12 +447,16 @@ function FuelFinder() {
           )}
         </div>
 
-        <button className="ff-btn ff-primary" onClick={compare}>Compare cheapest vs closest</button>
+        {mode === "near" ? (
+          <button className="ff-btn ff-primary" onClick={compare}>Compare cheapest vs closest</button>
+        ) : (
+          <button className="ff-btn ff-primary" onClick={searchRoute}>Find cheapest fuel on my route</button>
+        )}
         {loading && <p className="ff-status">{loading}</p>}
         {error && <p className="ff-error">{error}</p>}
       </div>
 
-      {result && (
+      {mode === "near" && result && (
         <div className="ff-card">
           {result.same ? (
             <p className="ff-verdict">Your closest station is also the cheapest — just go there.</p>
@@ -409,6 +479,50 @@ function FuelFinder() {
           </tbody></table>
           {result.searchNote && <p className="ff-hint" style={{color:"#b26a00"}}>{result.searchNote}</p>}
           <p className="ff-hint">Compared {result.count} stations near {suburb}. Routes via OSRM.</p>
+        </div>
+      )}
+
+      {mode === "route" && routeResult && (
+        <div className="ff-card">
+          <p className="ff-verdict ff-good">
+            Cheapest fuel on your {routeResult.routeKm} km trip:
+            {" "}<strong>{routeResult.stations[0].name}</strong> in {routeResult.stations[0].suburb}
+            {" "}at <strong>{routeResult.stations[0].price.toFixed(1)} c/L</strong>
+            {routeResult.stations[0].offRouteKm <= 0.6
+              ? " — right on your route."
+              : ` — about ${routeResult.stations[0].offRouteKm} km off your route.`}
+          </p>
+          <p className="ff-hint">
+            Ranked by real cost: pump price for a {fillLitres} L fill plus the fuel
+            burned detouring off your route. Showing the best {routeResult.stations.length}
+            {" "}of {routeResult.totalFound} within 5 km of your way.
+          </p>
+          {routeResult.stations.map((s, i) => (
+            <div className="ff-route-row" key={i}>
+              <div className="ff-route-rank">{i + 1}</div>
+              <div className="ff-route-body">
+                <div className="ff-route-name">{s.name} <span className="ff-route-price">{s.price.toFixed(1)} c/L</span></div>
+                <div className="ff-route-meta">
+                  {s.suburb} · {s.offRouteKm <= 0.6 ? "on route" : `${s.offRouteKm} km off route`}
+                  {" · "}fill {fmtMoney(s.fillCost)}
+                  {s.detourCost > 0.01 ? ` + detour ${fmtMoney(s.detourCost)}` : ""}
+                  {" = "}<strong>{fmtMoney(s.realCost)}</strong>
+                </div>
+                <div className="ff-route-links">
+                  <a href={mapsUrl(s)} target="_blank" rel="noopener noreferrer">Google Maps</a>
+                  <a href={wazeUrl(s)} target="_blank" rel="noopener noreferrer">Waze</a>
+                </div>
+              </div>
+            </div>
+          ))}
+          {routeResult.estimatedRoute && (
+            <p className="ff-hint" style={{color:"#b26a00"}}>
+              Routing service was unavailable, so this used a straight-line estimate — results are approximate.
+            </p>
+          )}
+          <p className="ff-hint">
+            Checked {routeResult.anchorsQueried} areas across {routeResult.samplePoints} points along your route. Routes via OSRM.
+          </p>
         </div>
       )}
 
