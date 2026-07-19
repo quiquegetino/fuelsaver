@@ -75,29 +75,36 @@ const API =
 
 // Product codes verified empirically against the live FuelWatch RSS feed
 // (the numeric RSS codes do NOT match the website dropdown order).
-// Confirmed by testing: 1=ULP, 2=Diesel, 4=Brand Diesel, 6=98 RON.
-// 3 and 5 confirmed as valid codes returning premium/E10-range prices.
+// FuelWatch product codes (authoritative, per FuelWatch RSS scheme):
+//   1 = Unleaded Petrol (ULP)
+//   2 = Premium Unleaded (PULP, 95 RON)
+//   4 = Diesel
+//   5 = LPG
+//   6 = 98 RON
+//   11 = Brand Diesel
+// NOTE: an earlier version mislabelled 2 as "Diesel" and 4 as "Brand Diesel",
+// which caused diesel searches to return petrol prices. Corrected here.
 const FUEL_PRODUCTS = [
   { code: 1, label: "Unleaded (ULP)" },
-  { code: 3, label: "Premium Unleaded (PULP)" },
-  { code: 2, label: "Diesel" },
-  { code: 4, label: "Brand Diesel" },
-  { code: 5, label: "LPG / E10" },
+  { code: 2, label: "Premium Unleaded (95)" },
   { code: 6, label: "98 RON" },
+  { code: 4, label: "Diesel" },
+  { code: 11, label: "Brand Diesel" },
+  { code: 5, label: "LPG" },
 ];
 
 const ECONOMY_DEFAULTS = {
-  1: 8.5, 2: 6.5, 3: 8.5, 4: 6.5, 5: 8.7, 6: 8.5,
+  1: 8.5, 2: 8.5, 6: 8.5, 4: 6.5, 11: 6.5, 5: 8.7,
 };
 
 // Maps a FuelWatch product code to the vehicle fuel category used for economy
-// lookup. Both diesel products -> Diesel variants; all petrol-family products
-// (ULP/PULP/98) -> Petrol (which also covers hybrids). LPG/E10 has no clean
-// vehicle category here, so it falls back to no filter.
+// lookup. Both diesel products (4, 11) -> Diesel variants; all petrol-family
+// products (ULP/PULP/98) -> Petrol (which also covers hybrids). LPG has no
+// clean vehicle category here, so it falls back to no filter.
 function fuelCategoryForProduct(code) {
-  if (code === 2 || code === 4) return "Diesel";
-  if (code === 1 || code === 3 || code === 6) return "Petrol";
-  return null; // LPG/E10 (5) — don't filter
+  if (code === 4 || code === 11) return "Diesel";
+  if (code === 1 || code === 2 || code === 6) return "Petrol";
+  return null; // LPG (5) — don't filter
 }
 
 async function api(path, params) {
