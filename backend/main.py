@@ -448,7 +448,7 @@ async def reverse(lat: float, lng: float):
 
 @app.get("/api/fuel")
 async def fuel(
-    product: int = Query(1, ge=1, le=6),
+    product: int = Query(1, ge=1, le=11),
     suburb: str = Query(...),
     lat: float | None = None,
     lng: float | None = None,
@@ -493,7 +493,7 @@ async def fuel(
 
 @app.get("/api/fuel-metro")
 async def fuel_metro(
-    product: int = Query(1, ge=1, le=6),
+    product: int = Query(1, ge=1, le=11),
     lat: float = Query(..., ge=-35.4, le=-13.4),
     lng: float = Query(..., ge=112.5, le=129.2),
     radius_km: float = Query(20.0, gt=0, le=200),
@@ -569,7 +569,7 @@ async def route(from_: str = Query(..., alias="from"), to: str = Query(...)):
 
 @app.get("/api/fuel-route")
 async def fuel_route(
-    product: int = Query(1, ge=1, le=6),
+    product: int = Query(1, ge=1, le=11),
     from_: str = Query(..., alias="from"),
     to: str = Query(...),
     max_detour_km: float = Query(5.0, gt=0, le=50),
