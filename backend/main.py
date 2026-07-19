@@ -235,6 +235,102 @@ async def _fetch_stations(product, suburb):
     return stations
 
 
+# ---------------------------------------------------------------------------
+# FuelWatch regions. This is the authoritative list of every area FuelWatch
+# covers (62 regions spanning all metro sub-regions plus every regional town/
+# shire in the scheme), with approximate centre coordinates. Querying by region
+# returns ALL stations in that whole area in a single call, so region-based
+# search gives complete coverage of FuelWatch's footprint far more efficiently
+# than pooling many individual suburbs. Source: FuelWatch RSS region IDs.
+# ---------------------------------------------------------------------------
+FUELWATCH_REGIONS = [
+    (1, "Boulder", -30.78, 121.49),
+    (2, "Broome", -17.96, 122.24),
+    (3, "Busselton (Townsite)", -33.65, 115.35),
+    (4, "Carnarvon", -24.88, 113.66),
+    (5, "Collie", -33.36, 116.16),
+    (6, "Dampier", -20.66, 116.71),
+    (7, "Esperance", -33.86, 121.89),
+    (8, "Kalgoorlie", -30.75, 121.47),
+    (9, "Karratha", -20.74, 116.85),
+    (10, "Kununurra", -15.77, 128.74),
+    (11, "Narrogin", -32.94, 117.18),
+    (12, "Northam", -31.65, 116.67),
+    (13, "Port Hedland", -20.31, 118.61),
+    (14, "South Hedland", -20.41, 118.60),
+    (15, "Albany", -35.03, 117.88),
+    (16, "Bunbury", -33.33, 115.64),
+    (17, "Geraldton", -28.77, 114.61),
+    (18, "Mandurah", -32.53, 115.72),
+    (19, "Capel", -33.56, 115.57),
+    (20, "Dardanup", -33.40, 115.76),
+    (21, "Greenough", -28.95, 114.74),
+    (22, "Harvey", -33.08, 115.90),
+    (23, "Murray", -32.65, 115.88),
+    (24, "Waroona", -32.84, 115.92),
+    (25, "Metro : North of River", -31.90, 115.83),
+    (26, "Metro : South of River", -32.05, 115.86),
+    (27, "Metro : East/Hills", -31.92, 116.05),
+    (28, "Augusta / Margaret River", -33.95, 115.07),
+    (29, "Busselton (Shire)", -33.65, 115.35),
+    (30, "Bridgetown / Greenbushes", -33.96, 116.14),
+    (31, "Donnybrook / Balingup", -33.57, 115.82),
+    (32, "Manjimup", -34.24, 116.15),
+    (33, "Cataby", -30.75, 115.55),
+    (34, "Coolgardie", -30.95, 121.16),
+    (35, "Cunderdin", -31.65, 117.24),
+    (36, "Dalwallinu", -30.28, 116.66),
+    (37, "Denmark", -34.96, 117.35),
+    (38, "Derby", -17.30, 123.63),
+    (39, "Dongara", -29.26, 114.93),
+    (40, "Exmouth", -21.93, 114.13),
+    (41, "Fitzroy Crossing", -18.19, 125.56),
+    (42, "Jurien", -30.31, 115.04),
+    (43, "Kambalda", -31.20, 121.66),
+    (44, "Kellerberrin", -31.63, 117.72),
+    (45, "Kojonup", -33.83, 117.15),
+    (46, "Meekatharra", -26.59, 118.49),
+    (47, "Moora", -30.64, 116.01),
+    (48, "Mount Barker", -34.63, 117.67),
+    (49, "Newman", -23.36, 119.73),
+    (50, "Norseman", -32.20, 121.78),
+    (51, "Ravensthorpe", -33.58, 120.05),
+    (53, "Tammin", -31.64, 117.49),
+    (54, "Williams", -33.02, 116.88),
+    (55, "Wubin", -30.11, 116.63),
+    (56, "York", -31.89, 116.77),
+    (57, "Regans Ford", -30.98, 115.70),
+    (58, "Meckering", -31.63, 117.01),
+    (59, "Wundowie", -31.76, 116.38),
+    (60, "North Bannister", -32.58, 116.46),
+    (61, "Munglinup", -33.71, 120.79),
+    (62, "Northam (Shire)", -31.65, 116.67),
+    (63, "Bodallin", -31.36, 118.86),
+]
+
+
+async def _fetch_region(product, region_id):
+    """Fetch all stations in a FuelWatch region, using the daily cache."""
+    global _price_cache, _price_cache_day
+    day = _fuelwatch_day()
+    if day != _price_cache_day:
+        _price_cache = {}
+        _price_cache_day = day
+    key = (day, product, f"region:{region_id}")
+    if key in _price_cache:
+        return _price_cache[key]
+    r = await _get(FUELWATCH, params={"Product": product, "Region": region_id})
+    stations = _parse_stations(r.text)
+    _price_cache[key] = stations
+    return stations
+
+
+def _nearest_regions(lat, lng, n=3):
+    """Return the n nearest FuelWatch regions to a point, closest first."""
+    ranked = sorted(FUELWATCH_REGIONS, key=lambda r: _haversine(lat, lng, r[2], r[3]))
+    return ranked[:n]
+
+
 def _nearest_anchors(lat, lng, n=6):
     """Return the n nearest anchor suburbs, closest first."""
     ranked = sorted(ANCHOR_SUBURBS, key=lambda a: _haversine(lat, lng, a[1], a[2]))
@@ -292,12 +388,52 @@ def _dist_point_to_route(lat, lng, route_coords, step=8):
 
 @app.get("/api/geocode")
 async def geocode(suburb: str):
+    # Basic input sanity: reject empty or obviously non-place input.
+    q = (suburb or "").strip()
+    if len(q) < 2 or len(q) > 60:
+        raise HTTPException(404, f'Please enter a valid WA suburb or town.')
+
     r = await _get(f"{NOMINATIM}/search",
-                   params={"format": "json", "q": f"{suburb}, Western Australia, Australia", "limit": 1})
+                   params={
+                       "format": "json",
+                       "q": f"{q}, Western Australia, Australia",
+                       "limit": 5,
+                       "addressdetails": 1,
+                   })
     data = r.json()
     if not data:
-        raise HTTPException(404, f'Could not find "{suburb}" in WA.')
-    return {"lat": float(data[0]["lat"]), "lng": float(data[0]["lon"])}
+        raise HTTPException(404, f'Could not find "{q}" in WA. Try a nearby suburb or town.')
+
+    # WA bounding box (approximate): lat -35.3..-13.5, lng 112.8..129.0.
+    # Reject anything geocoded outside the state.
+    def in_wa(lat, lng):
+        return -35.4 <= lat <= -13.4 and 112.5 <= lng <= 129.2
+
+    # Only accept results that are actual populated places / boundaries, not
+    # arbitrary points of interest (which is how nonsense like a joke phrase can
+    # sometimes latch onto an unrelated POI). Nominatim tags these via "class"
+    # and "type"/"addresstype".
+    ACCEPT_CLASSES = {"place", "boundary"}
+    ACCEPT_TYPES = {
+        "suburb", "town", "city", "village", "hamlet", "locality",
+        "neighbourhood", "administrative", "municipality",
+    }
+
+    for cand in data:
+        try:
+            lat = float(cand["lat"]); lng = float(cand["lon"])
+        except (KeyError, ValueError):
+            continue
+        if not in_wa(lat, lng):
+            continue
+        cls = cand.get("class", "")
+        typ = cand.get("type", "")
+        addrtype = cand.get("addresstype", "")
+        if cls in ACCEPT_CLASSES or typ in ACCEPT_TYPES or addrtype in ACCEPT_TYPES:
+            return {"lat": lat, "lng": lng, "name": cand.get("display_name", q).split(",")[0]}
+
+    # Nothing matched as a real WA locality.
+    raise HTTPException(404, f'"{q}" doesn\'t look like a WA suburb or town. Try a nearby one.')
 
 
 @app.get("/api/reverse")
@@ -312,7 +448,7 @@ async def reverse(lat: float, lng: float):
 
 @app.get("/api/fuel")
 async def fuel(
-    product: int = 1,
+    product: int = Query(1, ge=1, le=6),
     suburb: str = Query(...),
     lat: float | None = None,
     lng: float | None = None,
@@ -357,10 +493,10 @@ async def fuel(
 
 @app.get("/api/fuel-metro")
 async def fuel_metro(
-    product: int = 1,
-    lat: float = Query(...),
-    lng: float = Query(...),
-    radius_km: float = 20.0,
+    product: int = Query(1, ge=1, le=6),
+    lat: float = Query(..., ge=-35.4, le=-13.4),
+    lng: float = Query(..., ge=112.5, le=129.2),
+    radius_km: float = Query(20.0, gt=0, le=200),
 ):
     """
     Area-wide search that scales from metro to regional WA. Rather than querying
@@ -372,21 +508,19 @@ async def fuel_metro(
     the radius, it returns the single nearest station found so the user isn't
     dead-ended — flagged so the frontend can note it's beyond their radius.
     """
-    # Choose which anchors to actually query. Buffer covers stations that lie
-    # within the radius even though the anchor's centre is a bit further out.
-    buffer = max(25.0, radius_km * 0.5)
-    ranked = sorted(ANCHOR_SUBURBS, key=lambda a: _haversine(lat, lng, a[1], a[2]))
-    query_anchors = [a for a in ranked if _haversine(lat, lng, a[1], a[2]) <= radius_km + buffer]
-    # Always include at least the nearest few, even if beyond the buffer
-    # (matters for remote users far from any anchor).
-    for a in ranked[:4]:
-        if a not in query_anchors:
-            query_anchors.append(a)
-    # Safety cap so an enormous radius can't fan out to the whole state at once.
-    query_anchors = query_anchors[:25]
+    # Query by FuelWatch REGION rather than individual suburbs. Each region call
+    # returns every station in that whole area, so this gives complete coverage
+    # of FuelWatch's footprint. We query the nearest regions to the user; a wide
+    # radius pulls in more neighbouring regions.
+    n_regions = 2
+    if radius_km > 40:
+        n_regions = 3
+    if radius_km > 100:
+        n_regions = 5
+    regions = _nearest_regions(lat, lng, n=n_regions)
 
     results = await asyncio.gather(
-        *[_fetch_stations(product, a[0]) for a in query_anchors],
+        *[_fetch_region(product, r[0]) for r in regions],
         return_exceptions=True,
     )
     pooled = []
@@ -414,7 +548,7 @@ async def fuel_metro(
         "radiusKm": radius_km,
         "totalFound": len(merged),
         "withinRadius": len([s for s in merged if s["distanceKm"] <= radius_km]),
-        "anchorsQueried": len(query_anchors),
+        "regionsQueried": [r[1] for r in regions],
         "beyondRadius": beyond_radius,
     }
 
@@ -435,12 +569,12 @@ async def route(from_: str = Query(..., alias="from"), to: str = Query(...)):
 
 @app.get("/api/fuel-route")
 async def fuel_route(
-    product: int = 1,
+    product: int = Query(1, ge=1, le=6),
     from_: str = Query(..., alias="from"),
     to: str = Query(...),
-    max_detour_km: float = 5.0,
-    fill_litres: float = 50.0,
-    l_per_100km: float = 8.0,
+    max_detour_km: float = Query(5.0, gt=0, le=50),
+    fill_litres: float = Query(50.0, gt=0, le=500),
+    l_per_100km: float = Query(8.0, gt=0, le=40),
 ):
     """
     Find the cheapest fuel *along a route* from origin to destination.
@@ -480,17 +614,19 @@ async def fuel_route(
     # 2. Sample points along the route.
     samples = _sample_route(route_coords, interval_km=25.0)
 
-    # 3. For each sample, find nearby anchor suburbs to query. Pool & dedupe
-    #    the anchor set first so we don't query the same suburb many times.
-    anchor_names = set()
+    # 3. For each sample, find the nearest FuelWatch regions to query. Pool the
+    #    region set (deduped) so a route passing through an area only queries it
+    #    once. Region queries return every station in the area, giving complete
+    #    coverage along the whole corridor.
+    region_ids = {}
     for lng, lat in samples:
-        for a in _nearest_anchors(lat, lng, n=3):
-            anchor_names.add(a[0])
-    # Safety cap so a very long route can't fan out unbounded.
-    anchor_names = list(anchor_names)[:40]
+        for r in _nearest_regions(lat, lng, n=2):
+            region_ids[r[0]] = r[1]
+    # Safety cap so a very long cross-state route stays bounded.
+    region_items = list(region_ids.items())[:20]
 
     results = await asyncio.gather(
-        *[_fetch_stations(product, name) for name in anchor_names],
+        *[_fetch_region(product, rid) for rid, _ in region_items],
         return_exceptions=True,
     )
     pooled = []
@@ -527,7 +663,7 @@ async def fuel_route(
         "totalFound": len(on_route),
         "routeKm": round(total_km, 1),
         "samplePoints": len(samples),
-        "anchorsQueried": len(anchor_names),
+        "regionsQueried": len(region_items),
         "maxDetourKm": max_detour_km,
         "estimatedRoute": estimated,
     }
