@@ -2118,6 +2118,7 @@ Ford,Escape,2026,2.0L 4cyl Auto,Petrol,9.1
 Ford,Escape,2025,1.5L 3cyl Auto,Petrol,8.2
 Ford,Escape,2025,2.0L 4cyl Auto,Petrol,9.1
 Ford,Escape,2020,2.0 Petrol AWD,Petrol,8.6
+Ford,Escape,2017,2.0 Turbo Petrol AWD,Petrol,8.6
 Ford,Escape,2016,1.5L 4cyl Turbo Petrol,Petrol,6.3
 Ford,Escape,2014,1.6L 4cyl Auto,Petrol,9.2
 Ford,Escape,2014,2.0L 4cyl Auto,Petrol,9.8
@@ -2427,11 +2428,15 @@ Ford,F-250,1995,5.0L 8cyl Auto,Petrol,17.0
 Ford,F-250,1995,5.0L 8cyl Manual,Petrol,16.5
 Ford,F-250,1995,5.8L 8cyl Auto,Petrol,17.4
 Ford,F-250 NGV,1998,5.4L 8cyl Auto,Petrol,20.0
+Ford,Falcon,2015,2.0 EcoBoost Petrol,Petrol,8.1
 Ford,Falcon,2014,4.0L 6cyl Normal,LPG,11.7
+Ford,Falcon,2014,4.0 Petrol,Petrol,9.9
 Ford,Falcon,2012,4.0L 6cyl Normal,LPG,12.3
 Ford,Falcon,2011,4.0L 6cyl Normal,LPG,12.5
+Ford,Falcon,2011,4.0 Petrol,Petrol,9.9
 Ford,Falcon,2009,4.0L 6cyl Normal,LPG,14.9
 Ford,Falcon,2008,4.0L 6cyl Normal,LPG,14.9
+Ford,Falcon,2008,4.0 Petrol,Petrol,10.8
 Ford,Falcon,2006,4.0L 6cyl Normal,LPG,15.1
 Ford,Falcon,2005,4.0L 6cyl Normal,LPG,15.9
 Ford,Falcon,2004,4.0L 6cyl Normal,LPG,15.3
@@ -2440,6 +2445,7 @@ Ford,Fiesta,2016,1.0L 3cyl Turbo Petrol,Petrol,5.4
 Ford,Fiesta,2015,1.6L 4cyl Turbo Petrol,Petrol,6.2
 Ford,Fiesta,2014,1.6L 4cyl Auto,Petrol,7.6
 Ford,Fiesta,2014,1.6L 4cyl Manual,Petrol,7.8
+Ford,Fiesta,2014,1.0 Turbo Petrol,Petrol,4.9
 Ford,Fiesta,2013,1.0L 3cyl Turbo Petrol,Petrol,4.9
 Ford,Fiesta,2013,1.5L 4cyl Normal Petrol,Petrol,5.8
 Ford,Fiesta,2013,1.6L 4cyl Turbo Petrol,Petrol,6.2
@@ -2448,6 +2454,7 @@ Ford,Fiesta,2011,1.6L 4cyl Turbo Diesel,Diesel,3.6
 Ford,Fiesta,2010,1.6L 4cyl Turbo Diesel,Diesel,3.7
 Ford,Fiesta,2010,1.6L 4cyl Normal Diesel,Diesel,4.4
 Ford,Fiesta,2010,1.6L 4cyl Normal Petrol,Petrol,6.1
+Ford,Fiesta,2010,1.6 Petrol,Petrol,6.1
 Ford,Fiesta,2009,1.6L 4cyl Turbo Diesel,Diesel,3.7
 Ford,Fiesta,2008,1.6L 4cyl Normal Petrol,Petrol,6.1
 Ford,Fiesta,2008,1.4L 4cyl Normal Petrol,Petrol,6.9
@@ -2477,11 +2484,13 @@ Ford,Flex TC,2013,3.5L 6cyl Auto,Petrol,12.8
 Ford,Focus,2021,1.5 Petrol,Petrol,6.4
 Ford,Focus,2019,1.5 Petrol,Petrol,6.4
 Ford,Focus,2015,1.5L 4cyl Turbo Petrol,Petrol,5.8
+Ford,Focus,2015,1.5 Turbo Petrol,Petrol,6.2
 Ford,Focus,2014,2.0L 4cyl Manual,Petrol,8.9
 Ford,Focus,2013,2.0L 4cyl Manual,Petrol,9.0
 Ford,Focus,2012,2.0L 4cyl Normal Diesel,Diesel,5.1
 Ford,Focus,2012,1.6L 4cyl Normal Petrol,Petrol,6.2
 Ford,Focus,2012,2.0L 4cyl Normal Petrol,Petrol,6.6
+Ford,Focus,2012,2.0 Petrol,Petrol,6.6
 Ford,Focus,2011,2.0L 4cyl Normal Diesel,Diesel,5.1
 Ford,Focus,2010,2.0L 4cyl Auto,Petrol,8.5
 Ford,Focus,2010,2.0L 4cyl Manual,Petrol,8.4
@@ -2489,6 +2498,7 @@ Ford,Focus,2009,2.0L 4cyl Auto,Petrol,8.6
 Ford,Focus,2009,2.0L 4cyl Manual,Petrol,8.5
 Ford,Focus,2008,2.0L 4cyl Auto,Petrol,8.5
 Ford,Focus,2008,2.0L 4cyl Manual,Petrol,8.5
+Ford,Focus,2008,2.0 Petrol,Petrol,7.8
 Ford,Focus,2007,2.0L 4cyl Auto,Petrol,9.2
 Ford,Focus,2007,2.0L 4cyl Manual,Petrol,8.7
 Ford,Focus,2007,2.3L 4cyl Manual,Petrol,10.2
@@ -2596,6 +2606,7 @@ Ford,Grand Marquis,2000,4.6L 8cyl Auto,Petrol,12.9
 Ford,Grand Marquis FFV,2009,4.6L 8cyl Auto,Petrol,15.0
 Ford,Grand Marquis FFV,2008,4.6L 8cyl Auto,Petrol,15.6
 Ford,Kuga,2015,1.5L 4cyl Turbo Petrol,Petrol,6.3
+Ford,Kuga,2013,1.6 Turbo Petrol AWD,Petrol,8.0
 Ford,Marauder,2004,4.6L 8cyl Auto,Petrol,13.5
 Ford,Maverick,2026,2.0L 4cyl Auto,Petrol,9.4
 Ford,Maverick,2025,2.0L 4cyl Auto,Petrol,9.4
@@ -2606,6 +2617,8 @@ Ford,Maverick Lobo,2026,2.0L 4cyl Auto,Petrol,9.7
 Ford,Maverick Lobo,2025,2.0L 4cyl Auto,Petrol,9.7
 Ford,Maverick Tremor,2026,2.0L 4cyl Auto,Petrol,10.1
 Ford,Maverick Tremor,2025,2.0L 4cyl Auto,Petrol,10.1
+Ford,Mondeo,2015,2.0 Diesel,Diesel,5.3
+Ford,Mondeo,2011,2.0 Diesel,Diesel,6.4
 Ford,Mustang,2026,2.3L 4cyl Auto,Petrol,9.1
 Ford,Mustang,2026,5.0L 8cyl Auto,Petrol,13.0
 Ford,Mustang,2026,5.0L 8cyl Manual,Petrol,13.4
@@ -2891,6 +2904,16 @@ Ford,Taurus Wagon,1995,3.8L 6cyl Auto,Petrol,12.5
 Ford,Taurus Wagon FFV,2005,3.0L 6cyl Auto,Petrol,14.2
 Ford,Taurus X,2009,3.5L 6cyl Auto,Petrol,12.8
 Ford,Taurus X,2008,3.5L 6cyl Auto,Petrol,12.9
+Ford,Territory,2016,2.7 V6 Diesel RWD,Diesel,8.0
+Ford,Territory,2015,4.0 Petrol RWD,Petrol,10.6
+Ford,Territory,2014,2.7 V6 Diesel AWD,Diesel,8.2
+Ford,Territory,2013,4.0 Petrol RWD,Petrol,10.6
+Ford,Territory,2012,2.7 V6 Diesel RWD,Diesel,8.0
+Ford,Territory,2011,2.7 V6 Diesel AWD,Diesel,8.2
+Ford,Territory,2009,4.0 Petrol RWD,Petrol,11.7
+Ford,Territory,2008,4.0 Petrol AWD,Petrol,12.3
+Ford,Territory,2006,4.0 Petrol RWD,Petrol,11.9
+Ford,Territory,2004,4.0 Petrol RWD,Petrol,11.9
 Ford,Thunderbird,2005,3.9L 8cyl Auto,Petrol,13.0
 Ford,Thunderbird,2004,3.9L 8cyl Auto,Petrol,13.6
 Ford,Thunderbird,2003,3.9L 8cyl Auto,Petrol,12.9
@@ -2962,9 +2985,13 @@ GWM,Tank 300,2023,2.0 Turbo Petrol 4x4,Petrol,9.5
 GWM,Ute,2023,2.0 Diesel 4x4,Diesel,9.4
 GWM,Ute,2022,2.0 Diesel 4x4,Diesel,9.4
 GWM,Ute,2021,2.0 Diesel 4x4,Diesel,9.4
+Holden,Astra,2018,1.6 Turbo Petrol,Petrol,6.8
 Holden,Astra,2017,1.4L 4cyl Turbo Petrol,Petrol,5.8
 Holden,Astra,2016,1.4L 4cyl Turbo Petrol,Petrol,5.8
+Holden,Astra,2016,1.4 Turbo Petrol,Petrol,5.8
+Holden,Barina,2015,1.6 Petrol,Petrol,6.4
 Holden,Barina,2012,1.6L 4cyl Normal Petrol,Petrol,6.3
+Holden,Barina,2012,1.6 Petrol,Petrol,6.5
 Holden,Barina,2008,1.6L 4cyl Normal Petrol,Petrol,7.0
 Holden,Barina,2006,1.6L 4cyl Normal Petrol,Petrol,6.9
 Holden,Barina,2005,1.4L 4cyl Normal Petrol,Petrol,5.9
@@ -2976,6 +3003,12 @@ Holden,Calais,2012,3.6L 6cyl Normal,LPG,12.3
 Holden,Calais V,2012,3.6L 6cyl Normal,LPG,12.3
 Holden,Caprice,2013,3.6L 6cyl Normal,LPG,12.1
 Holden,Caprice,2012,3.6L 6cyl Normal,LPG,12.3
+Holden,Captiva,2016,2.4 Petrol FWD,Petrol,9.4
+Holden,Captiva,2015,2.2 Diesel AWD,Diesel,8.5
+Holden,Captiva,2013,2.2 Diesel AWD,Diesel,8.0
+Holden,Captiva,2011,2.2 Diesel AWD,Diesel,7.9
+Holden,Captiva,2009,2.0 Diesel AWD,Diesel,8.8
+Holden,Captiva,2007,3.2 V6 Petrol AWD,Petrol,11.8
 Holden,Colorado,2020,2.8 Diesel 4x4,Diesel,8.7
 Holden,Colorado,2019,2.8 Diesel 4x4,Diesel,8.7
 Holden,Colorado,2018,2.8 Diesel 4x4,Diesel,8.7
@@ -2985,14 +3018,26 @@ Holden,Colorado,2012,2.8 Diesel 4x4,Diesel,8.9
 Holden,Combo,2010,1.4L 4cyl Normal Petrol,Petrol,6.2
 Holden,Combo,2008,1.4L 4cyl Normal Petrol,Petrol,6.2
 Holden,Commodore,2018,3.6 V6 Petrol,Petrol,9.3
+Holden,Commodore,2016,6.2 V8 Petrol,Petrol,12.9
+Holden,Commodore,2015,3.6 V6 Petrol,Petrol,9.0
 Holden,Commodore,2013,3.6L 6cyl Normal,LPG,11.5
+Holden,Commodore,2013,3.6 V6 Petrol,Petrol,9.0
 Holden,Commodore,2012,3.6L 6cyl Normal,LPG,11.8
+Holden,Commodore,2010,3.0 V6 Petrol,Petrol,9.3
+Holden,Commodore,2008,3.6 V6 Petrol,Petrol,10.9
+Holden,Commodore,2006,3.6 V6 Petrol,Petrol,10.9
+Holden,Cruze,2015,1.4 Turbo Petrol,Petrol,6.8
+Holden,Cruze,2014,1.6 Turbo Petrol,Petrol,7.0
+Holden,Cruze,2013,1.8 Petrol,Petrol,7.4
 Holden,Cruze,2011,1.4L 4cyl Turbo Petrol,Petrol,6.4
 Holden,Cruze,2009,1.8L 4cyl Normal Petrol,Petrol,7.0
 Holden,Cruze,2004,1.5L 4cyl Normal Petrol 4WD,Petrol,6.5
 Holden,Spark,2017,1.4L 4cyl Normal Petrol,Petrol,5.3
 Holden,Spark,2016,1.4L 4cyl Normal Petrol,Petrol,5.2
 Holden,Sport Wagon,2012,3.6L 6cyl Normal,LPG,12.3
+Holden,Trailblazer,2017,2.8 Diesel 4x4,Diesel,8.6
+Holden,Trax,2017,1.4 Turbo Petrol,Petrol,6.7
+Holden,Trax,2015,1.4 Turbo Petrol,Petrol,6.7
 Holden,Utility,2012,3.6L 6cyl Normal,LPG,12.4
 Honda,Accord,2025,1.5L 4cyl CVT,Petrol,7.3
 Honda,Accord,2021,1.5 Turbo Petrol,Petrol,6.5
@@ -3107,6 +3152,7 @@ Honda,Accord Wagon,1995,2.2L 4cyl Auto,Petrol,11.1
 Honda,Accord Wagon,1995,2.2L 4cyl Manual,Petrol,10.0
 Honda,City,2017,1.5L 4cyl Normal Petrol,Petrol,5.8
 Honda,City,2014,1.5L 4cyl Normal Petrol,Petrol,5.7
+Honda,City,2014,1.5 Petrol,Petrol,5.7
 Honda,City,2008,1.5L 4cyl Normal Petrol,Petrol,6.3
 Honda,Civic,2023,1.5 Turbo Petrol,Petrol,6.3
 Honda,Civic,2023,2.0 Hybrid,Hybrid,4.2
@@ -3211,14 +3257,17 @@ Honda,CR-V,2025,1.5L 4cyl CVT,Petrol,8.1
 Honda,CR-V,2023,2.0L 4cyl Normal Petrol,Petrol,5.5
 Honda,CR-V,2022,1.5 Turbo Petrol 2WD,Petrol,7.3
 Honda,CR-V,2019,1.5 Turbo Petrol 2WD,Petrol,7.3
+Honda,CR-V,2017,1.5 Turbo Petrol,Petrol,7.3
 Honda,CR-V,2014,2.4L 4cyl Auto,Petrol,9.2
 Honda,CR-V,2013,2.4L 4cyl Auto,Petrol,9.2
 Honda,CR-V,2012,2.4L 4cyl Auto,Petrol,9.2
+Honda,CR-V,2012,2.4 Petrol AWD,Petrol,8.7
 Honda,CR-V,2011,2.4L 4cyl Auto,Petrol,10.2
 Honda,CR-V,2010,2.4L 4cyl Auto,Petrol,10.2
 Honda,CR-V,2009,2.4L 4cyl Auto,Petrol,10.6
 Honda,CR-V,2008,2.4L 4cyl Auto,Petrol,10.6
 Honda,CR-V,2007,2.4L 4cyl Auto,Petrol,10.6
+Honda,CR-V,2007,2.4 Petrol AWD,Petrol,9.8
 Honda,CR-V,2006,2.4L 4cyl Auto,Petrol,10.9
 Honda,CR-V,2006,2.4L 4cyl Manual,Petrol,11.4
 Honda,CR-V,2005,2.4L 4cyl Auto,Petrol,10.9
@@ -3311,6 +3360,8 @@ Honda,Insight EX,2013,1.3L 4cyl CVT,Petrol,5.5
 Honda,Insight EX,2011,1.3L 4cyl CVT,Petrol,5.7
 Honda,Insight EX,2010,1.3L 4cyl CVT,Petrol,5.9
 Honda,Insight LX,2012,1.3L 4cyl CVT,Petrol,5.6
+Honda,Jazz,2018,1.5 Petrol,Petrol,5.8
+Honda,Jazz,2015,1.5 Petrol,Petrol,5.8
 Honda,Jazz,2014,1.5L 4cyl Normal Petrol,Petrol,5.8
 Honda,Jazz,2012,1.3L 4cyl Normal Petrol,Petrol,5.8
 Honda,Jazz,2009,1.3L 4cyl Normal Petrol,Petrol,6.6
@@ -3323,6 +3374,7 @@ Honda,Jazz,2003,1.5L 4cyl Normal Petrol,Petrol,6.2
 Honda,Odyssey,2026,3.5L 6cyl Auto,Petrol,10.6
 Honda,Odyssey,2025,3.5L 6cyl Auto,Petrol,10.6
 Honda,Odyssey,2014,3.5L 6cyl Auto,Petrol,10.6
+Honda,Odyssey,2014,2.4 Petrol,Petrol,7.8
 Honda,Odyssey,2013,3.5L 6cyl Auto,Petrol,10.8
 Honda,Odyssey,2012,3.5L 6cyl Auto,Petrol,10.8
 Honda,Odyssey,2011,3.5L 6cyl Auto,Petrol,10.8
@@ -3415,6 +3467,7 @@ Hyundai,Accent,2014,1.6L 4cyl Auto,Petrol,7.7
 Hyundai,Accent,2014,1.6L 4cyl Manual,Petrol,7.7
 Hyundai,Accent,2013,1.6L 4cyl Normal Petrol,Petrol,6.1
 Hyundai,Accent,2012,1.6L 4cyl Normal Diesel,Diesel,4.4
+Hyundai,Accent,2012,1.6 Petrol,Petrol,6.4
 Hyundai,Accent,2011,1.6L 4cyl Normal Petrol,Petrol,6.0
 Hyundai,Accent,2010,1.6L 4cyl Auto,Petrol,7.8
 Hyundai,Accent,2010,1.6L 4cyl Manual,Petrol,7.7
@@ -3465,6 +3518,7 @@ Hyundai,Elantra,2026,1.6L 4cyl Auto,Petrol,7.6
 Hyundai,Elantra,2026,2.0L 4cyl CVT,Petrol,6.8
 Hyundai,Elantra,2025,1.6L 4cyl Auto,Petrol,7.6
 Hyundai,Elantra,2025,2.0L 4cyl CVT,Petrol,6.7
+Hyundai,Elantra,2014,1.8 Petrol,Petrol,7.2
 Hyundai,Elantra,2013,1.8L 4cyl Auto,Petrol,7.5
 Hyundai,Elantra,2013,1.8L 4cyl Manual,Petrol,7.4
 Hyundai,Elantra,2012,1.8L 4cyl Auto,Petrol,7.5
@@ -3475,6 +3529,7 @@ Hyundai,Elantra,2011,1.8L 4cyl Auto,Petrol,7.5
 Hyundai,Elantra,2011,1.8L 4cyl Manual,Petrol,7.4
 Hyundai,Elantra,2011,2.0L 4cyl Auto,Petrol,9.0
 Hyundai,Elantra,2011,2.0L 4cyl Manual,Petrol,9.1
+Hyundai,Elantra,2011,1.8 Petrol,Petrol,7.1
 Hyundai,Elantra,2010,2.0L 4cyl Auto,Petrol,8.6
 Hyundai,Elantra,2010,2.0L 4cyl Manual,Petrol,8.6
 Hyundai,Elantra,2009,2.0L 4cyl Auto,Petrol,8.7
@@ -3585,10 +3640,13 @@ Hyundai,i30,2020,2.0 Petrol,Petrol,7.4
 Hyundai,i30,2018,2.0 Petrol,Petrol,7.4
 Hyundai,i30,2018,1.6 Diesel,Diesel,4.7
 Hyundai,i30,2017,1.6L 4cyl Turbo Diesel,Diesel,4.5
+Hyundai,i30,2015,1.8 Petrol,Petrol,7.3
 Hyundai,i30,2012,1.6L 4cyl Turbo Diesel,Diesel,4.5
+Hyundai,i30,2012,1.8 Petrol,Petrol,7.3
 Hyundai,i30,2011,1.6L 4cyl Turbo Diesel,Diesel,4.5
 Hyundai,i30,2010,1.6L 4cyl Turbo Diesel,Diesel,4.7
 Hyundai,i30,2010,1.6L 4cyl Normal Petrol,Petrol,6.5
+Hyundai,i30,2009,2.0 Petrol,Petrol,7.5
 Hyundai,i30,2008,1.6L 4cyl Turbo Diesel,Diesel,4.7
 Hyundai,i30,2007,1.6L 4cyl Turbo Diesel,Diesel,4.7
 Hyundai,i30 3Dr,2013,1.6L 4cyl Normal Petrol,Petrol,6.3
@@ -3609,6 +3667,8 @@ Hyundai,Ioniq 5,2024,LR 19inch,Electric,0.0
 Hyundai,Ioniq 5,2024,4WD,Electric,0.0
 Hyundai,Ioniq 5,2022,Electric AWD,Electric,0.0
 Hyundai,Ioniq 6,2022,Normal,Electric,0.0
+Hyundai,ix35,2013,2.0 Petrol,Petrol,7.9
+Hyundai,ix35,2010,2.4 Petrol AWD,Petrol,8.5
 Hyundai,Kona,2026,2.0L 4cyl CVT,Petrol,8.1
 Hyundai,Kona,2026,1.6L 4cyl Auto,Petrol,9.0
 Hyundai,Kona,2025,2.0L 4cyl CVT,Petrol,8.1
@@ -3634,6 +3694,8 @@ Hyundai,Santa Fe,2025,2.5L 4cyl Auto,Petrol,10.6
 Hyundai,Santa Fe,2024,1.6 Hybrid AWD,Hybrid,5.6
 Hyundai,Santa Fe,2021,2.2 Diesel AWD,Diesel,6.1
 Hyundai,Santa Fe,2021,3.5 V6 Petrol AWD,Petrol,10.5
+Hyundai,Santa Fe,2018,2.2 Diesel AWD,Diesel,7.5
+Hyundai,Santa Fe,2015,2.2 Diesel AWD,Diesel,7.7
 Hyundai,Santa Fe,2014,3.3L 6cyl Auto,Petrol,11.4
 Hyundai,Santa Fe,2014,2.4L 4cyl Auto,Petrol,10.7
 Hyundai,Santa Fe,2014,2.0L 4cyl Auto,Petrol,11.5
@@ -3642,6 +3704,7 @@ Hyundai,Santa Fe,2013,2.4L 4cyl Auto,Petrol,10.3
 Hyundai,Santa Fe,2012,2.4L 4cyl Auto,Petrol,10.7
 Hyundai,Santa Fe,2012,2.4L 4cyl Manual,Petrol,11.0
 Hyundai,Santa Fe,2012,3.5L 6cyl Auto,Petrol,10.6
+Hyundai,Santa Fe,2012,2.2 Diesel AWD,Diesel,7.3
 Hyundai,Santa Fe,2011,2.4L 4cyl Auto,Petrol,10.7
 Hyundai,Santa Fe,2011,2.4L 4cyl Manual,Petrol,11.0
 Hyundai,Santa Fe,2011,3.5L 6cyl Auto,Petrol,10.6
@@ -3657,6 +3720,7 @@ Hyundai,Santa Fe,2008,3.3L 6cyl Auto,Petrol,12.2
 Hyundai,Santa Fe,2007,2.7L 6cyl Auto,Petrol,11.5
 Hyundai,Santa Fe,2007,2.7L 6cyl Manual,Petrol,12.0
 Hyundai,Santa Fe,2007,3.3L 6cyl Auto,Petrol,12.4
+Hyundai,Santa Fe,2007,2.2 Diesel AWD,Diesel,7.6
 Hyundai,Santa Fe,2006,2.4L 4cyl Manual,Petrol,11.6
 Hyundai,Santa Fe,2006,2.7L 6cyl Auto,Petrol,12.6
 Hyundai,Santa Fe,2006,3.5L 6cyl Auto,Petrol,13.8
@@ -4609,11 +4673,17 @@ Kia,Cadenza,2014,3.3L 6cyl Auto,Petrol,10.9
 Kia,Carnival,2026,3.5L 6cyl Auto,Petrol,11.3
 Kia,Carnival,2025,3.5L 6cyl Auto,Petrol,11.1
 Kia,Carnival,2022,2.2 Diesel,Diesel,6.5
+Kia,Carnival,2016,2.2 Diesel,Diesel,7.7
+Kia,Carnival,2012,2.2 Diesel,Diesel,7.7
+Kia,Carnival,2007,2.9 Diesel,Diesel,9.0
 Kia,Carnival Hybrid,2026,1.6L 4cyl Auto,Petrol,7.2
 Kia,Carnival Hybrid,2025,1.6L 4cyl Auto,Petrol,7.2
 Kia,Cerato,2023,2.0 Petrol,Petrol,7.4
 Kia,Cerato,2021,2.0 Petrol,Petrol,7.4
 Kia,Cerato,2019,2.0 Petrol,Petrol,7.4
+Kia,Cerato,2018,2.0 Petrol,Petrol,7.4
+Kia,Cerato,2014,2.0 Petrol,Petrol,7.1
+Kia,Cerato,2010,2.0 Petrol,Petrol,7.4
 Kia,EV3,2025,Air LR,Electric,0.0
 Kia,EV3,2025,Air SR,Electric,0.0
 Kia,EV3,2025,Earth LR,Electric,0.0
@@ -4733,13 +4803,16 @@ Kia,Rio,2020,1.4L 4cyl Normal Petrol,Petrol,5.6
 Kia,Rio,2018,1.0L 3cyl Turbo Petrol,Petrol,5.4
 Kia,Rio,2018,1.4L 4cyl Normal Petrol,Petrol,5.6
 Kia,Rio,2017,1.4L 4cyl Normal Petrol,Petrol,5.6
+Kia,Rio,2017,1.4 Petrol,Petrol,5.6
 Kia,Rio,2014,1.6L 4cyl Auto,Petrol,7.6
 Kia,Rio,2014,1.6L 4cyl Manual,Petrol,7.7
+Kia,Rio,2014,1.4 Petrol,Petrol,6.0
 Kia,Rio,2013,1.6L 4cyl Normal Petrol,Petrol,5.6
 Kia,Rio,2012,1.6L 4cyl Normal Petrol,Petrol,5.6
 Kia,Rio,2012,1.4L 4cyl Normal Petrol,Petrol,5.7
 Kia,Rio,2011,1.6L 4cyl Normal Petrol,Petrol,5.3
 Kia,Rio,2011,1.4L 4cyl Normal Petrol,Petrol,5.3
+Kia,Rio,2011,1.4 Petrol,Petrol,6.0
 Kia,Rio,2010,1.6L 4cyl Auto,Petrol,7.8
 Kia,Rio,2010,1.6L 4cyl Manual,Petrol,7.7
 Kia,Rio,2009,1.6L 4cyl Auto,Petrol,8.0
@@ -4802,16 +4875,19 @@ Kia,Sorento,2023,2.2 Diesel AWD,Diesel,6.1
 Kia,Sorento,2023,1.6 Hybrid AWD,Hybrid,5.4
 Kia,Sorento,2021,2.2 Diesel AWD,Diesel,6.1
 Kia,Sorento,2021,3.5 V6 Petrol AWD,Petrol,9.7
+Kia,Sorento,2016,2.2 Diesel AWD,Diesel,7.7
 Kia,Sorento,2014,2.4L 4cyl Auto,Petrol,10.7
 Kia,Sorento,2014,3.3L 6cyl Auto,Petrol,11.6
 Kia,Sorento,2013,2.4L 4cyl Auto,Petrol,10.0
 Kia,Sorento,2013,3.5L 6cyl Auto,Petrol,11.1
+Kia,Sorento,2013,2.2 Diesel AWD,Diesel,7.3
 Kia,Sorento,2012,2.4L 4cyl Auto,Petrol,10.0
 Kia,Sorento,2012,2.4L 4cyl Manual,Petrol,10.6
 Kia,Sorento,2012,3.5L 6cyl Auto,Petrol,11.1
 Kia,Sorento,2011,2.4L 4cyl Auto,Petrol,10.0
 Kia,Sorento,2011,2.4L 4cyl Manual,Petrol,10.6
 Kia,Sorento,2011,3.5L 6cyl Auto,Petrol,10.8
+Kia,Sorento,2010,2.2 Diesel AWD,Diesel,7.4
 Kia,Sorento,2009,3.3L 6cyl Auto,Petrol,13.5
 Kia,Sorento,2009,3.8L 6cyl Auto,Petrol,13.8
 Kia,Sorento,2008,3.3L 6cyl Auto,Petrol,13.3
@@ -4869,9 +4945,11 @@ Kia,Sportage,2022,2.0 Petrol 2WD,Petrol,8.1
 Kia,Sportage,2022,1.6 Diesel AWD,Diesel,6.3
 Kia,Sportage,2019,2.0 Petrol 2WD,Petrol,7.9
 Kia,Sportage,2019,2.0 Diesel AWD,Diesel,6.8
+Kia,Sportage,2017,2.0 Petrol,Petrol,7.9
 Kia,Sportage,2014,2.4L 4cyl Auto,Petrol,10.3
 Kia,Sportage,2014,2.4L 4cyl Manual,Petrol,11.3
 Kia,Sportage,2014,2.0L 4cyl Auto,Petrol,11.4
+Kia,Sportage,2014,2.0 Petrol,Petrol,7.9
 Kia,Sportage,2013,2.4L 4cyl Auto,Petrol,9.9
 Kia,Sportage,2013,2.4L 4cyl Manual,Petrol,10.3
 Kia,Sportage,2013,2.0L 4cyl Auto,Petrol,10.8
@@ -4883,6 +4961,7 @@ Kia,Sportage,2011,2.4L 4cyl Manual,Petrol,10.3
 Kia,Sportage,2010,2.0L 4cyl Auto,Petrol,10.6
 Kia,Sportage,2010,2.0L 4cyl Manual,Petrol,10.9
 Kia,Sportage,2010,2.7L 6cyl Auto,Petrol,11.7
+Kia,Sportage,2010,2.0 Petrol,Petrol,7.9
 Kia,Sportage,2009,2.0L 4cyl Auto,Petrol,10.6
 Kia,Sportage,2009,2.0L 4cyl Manual,Petrol,10.9
 Kia,Sportage,2009,2.7L 6cyl Auto,Petrol,11.7
@@ -5528,6 +5607,8 @@ Mazda,CX-7,2011,2.3L 4cyl Auto,Petrol,11.8
 Mazda,CX-7,2011,2.5L 4cyl Auto,Petrol,10.4
 Mazda,CX-7,2010,2.3L 4cyl Auto,Petrol,11.8
 Mazda,CX-7,2010,2.5L 4cyl Auto,Petrol,10.4
+Mazda,CX-7,2010,2.5 Petrol,Petrol,9.1
+Mazda,CX-7,2007,2.3 Turbo Petrol AWD,Petrol,11.5
 Mazda,CX-7 Turbo,2009,2.3L 4cyl Auto,Petrol,12.3
 Mazda,CX-7 Turbo,2008,2.3L 4cyl Auto,Petrol,12.5
 Mazda,CX-7 Turbo,2007,2.3L 4cyl Auto,Petrol,12.7
@@ -5537,18 +5618,22 @@ Mazda,CX-70 (High Power),2026,3.3L 6cyl Auto,Petrol,9.5
 Mazda,CX-70 (High Power),2025,3.3L 6cyl Auto,Petrol,9.5
 Mazda,CX-8,2022,2.2 Diesel AWD,Diesel,6.0
 Mazda,CX-9,2021,2.5 Turbo Petrol AWD,Petrol,9.0
+Mazda,CX-9,2016,2.5 Turbo Petrol,Petrol,8.4
 Mazda,CX-9,2014,3.7L 6cyl Auto,Petrol,12.4
 Mazda,CX-9,2013,3.7L 6cyl Auto,Petrol,12.5
+Mazda,CX-9,2013,3.7 V6 Petrol AWD,Petrol,11.2
 Mazda,CX-9,2012,3.7L 6cyl Auto,Petrol,12.5
 Mazda,CX-9,2011,3.7L 6cyl Auto,Petrol,12.5
 Mazda,CX-9,2010,3.7L 6cyl Auto,Petrol,13.4
 Mazda,CX-9,2009,3.7L 6cyl Auto,Petrol,13.4
 Mazda,CX-9,2008,3.7L 6cyl Auto,Petrol,13.3
+Mazda,CX-9,2008,3.7 V6 Petrol AWD,Petrol,12.4
 Mazda,CX-90,2026,3.3L 6cyl Auto,Petrol,9.4
 Mazda,CX-90,2025,3.3L 6cyl Auto,Petrol,9.3
 Mazda,CX-90 (High Power),2026,3.3L 6cyl Auto,Petrol,9.5
 Mazda,CX-90 (High Power),2025,3.3L 6cyl Auto,Petrol,9.5
 Mazda,Mazda2,2022,1.5 Petrol,Petrol,5.0
+Mazda,Mazda2,2015,1.5 Petrol,Petrol,5.4
 Mazda,Mazda2,2014,1.5L 4cyl Auto,Petrol,7.7
 Mazda,Mazda2,2014,1.5L 4cyl Manual,Petrol,7.4
 Mazda,Mazda2,2013,1.5L 4cyl Auto,Petrol,7.7
@@ -5557,6 +5642,7 @@ Mazda,Mazda2,2012,1.5L 4cyl Auto,Petrol,7.7
 Mazda,Mazda2,2012,1.5L 4cyl Manual,Petrol,7.4
 Mazda,Mazda2,2011,1.5L 4cyl Auto,Petrol,8.0
 Mazda,Mazda2,2011,1.5L 4cyl Manual,Petrol,7.4
+Mazda,Mazda2,2010,1.5 Petrol,Petrol,6.4
 Mazda,Mazda3,2022,2.0 Petrol,Petrol,6.2
 Mazda,Mazda3,2020,2.0 Petrol,Petrol,6.2
 Mazda,Mazda3,2020,2.5 Petrol,Petrol,6.6
@@ -5857,6 +5943,7 @@ Mazda,Tribute,2008,3.0L 6cyl Auto,Petrol,12.1
 Mazda,Tribute,2006,2.3L 4cyl Auto,Petrol,11.4
 Mazda,Tribute,2006,2.3L 4cyl Manual,Petrol,10.5
 Mazda,Tribute,2006,3.0L 6cyl Auto,Petrol,12.4
+Mazda,Tribute,2006,3.0 V6 Petrol AWD,Petrol,11.5
 Mazda,Tribute,2005,2.3L 4cyl Auto,Petrol,12.2
 Mazda,Tribute,2005,2.3L 4cyl Manual,Petrol,10.6
 Mazda,Tribute,2005,3.0L 6cyl Auto,Petrol,12.8
@@ -7055,6 +7142,9 @@ MINI,One D,2010,1.6L 4cyl Turbo Diesel,Diesel,3.8
 Mitsubishi,ASX,2023,2.0 Petrol,Petrol,7.6
 Mitsubishi,ASX,2022,2.0 Petrol,Petrol,7.6
 Mitsubishi,ASX,2020,2.0 Petrol,Petrol,7.6
+Mitsubishi,ASX,2017,2.0 Petrol,Petrol,7.6
+Mitsubishi,ASX,2014,2.0 Petrol,Petrol,7.6
+Mitsubishi,ASX,2011,2.0 Petrol,Petrol,7.6
 Mitsubishi,Colt,2010,1.5L 4cyl Normal Petrol,Petrol,5.6
 Mitsubishi,Colt,2006,1.5L 4cyl Normal Petrol,Petrol,5.6
 Mitsubishi,Colt,2006,1.5L 4cyl Turbo Petrol,Petrol,6.7
@@ -7248,26 +7338,34 @@ Mitsubishi,Outlander,2023,2.4 PHEV AWD,Plug-in Hybrid,1.5
 Mitsubishi,Outlander,2022,2.5 Petrol AWD,Petrol,7.5
 Mitsubishi,Outlander,2022,2.4 PHEV AWD,Plug-in Hybrid,1.5
 Mitsubishi,Outlander,2019,2.4 Petrol 2WD,Petrol,7.2
+Mitsubishi,Outlander,2016,2.4 Petrol AWD,Petrol,7.2
 Mitsubishi,Outlander,2014,2.4L 4cyl CVT,Petrol,8.8
 Mitsubishi,Outlander,2014,3.0L 6cyl Auto,Petrol,10.2
 Mitsubishi,Outlander,2013,2.0L 4cyl Normal Petrol,Petrol,6.6
+Mitsubishi,Outlander,2013,2.0 Petrol,Petrol,6.6
 Mitsubishi,Outlander,2012,2.4L 4cyl CVT,Petrol,9.4
 Mitsubishi,Outlander,2012,3.0L 6cyl Auto,Petrol,11.1
 Mitsubishi,Outlander,2011,2.4L 4cyl CVT,Petrol,9.4
 Mitsubishi,Outlander,2011,3.0L 6cyl Auto,Petrol,11.1
 Mitsubishi,Outlander,2010,2.4L 4cyl CVT,Petrol,10.1
 Mitsubishi,Outlander,2010,3.0L 6cyl Auto,Petrol,11.3
+Mitsubishi,Outlander,2010,2.4 Petrol AWD,Petrol,8.6
 Mitsubishi,Outlander,2009,2.4L 4cyl CVT,Petrol,10.8
 Mitsubishi,Outlander,2009,3.0L 6cyl Auto,Petrol,11.8
 Mitsubishi,Outlander,2008,2.4L 4cyl CVT,Petrol,10.7
 Mitsubishi,Outlander,2008,3.0L 6cyl Auto,Petrol,12.1
 Mitsubishi,Outlander,2007,3.0L 6cyl Auto,Petrol,11.9
+Mitsubishi,Outlander,2007,2.4 Petrol AWD,Petrol,9.3
 Mitsubishi,Outlander,2006,2.4L 4cyl Auto,Petrol,11.4
 Mitsubishi,Outlander,2006,2.4L 4cyl Manual,Petrol,11.1
 Mitsubishi,Outlander,2005,2.4L 4cyl Auto,Petrol,11.4
 Mitsubishi,Outlander,2005,2.4L 4cyl Manual,Petrol,11.1
 Mitsubishi,Outlander,2004,2.4L 4cyl Auto,Petrol,11.5
 Mitsubishi,Outlander,2003,2.4L 4cyl Auto,Petrol,11.8
+Mitsubishi,Pajero,2016,3.2 Diesel 4x4,Diesel,9.0
+Mitsubishi,Pajero,2013,3.2 Diesel 4x4,Diesel,9.0
+Mitsubishi,Pajero,2010,3.2 Diesel 4x4,Diesel,9.1
+Mitsubishi,Pajero,2007,3.2 Diesel 4x4,Diesel,9.6
 Mitsubishi,Pajero Sport,2022,2.4 Diesel 4x4,Diesel,8.0
 Mitsubishi,Pajero Sport,2021,2.4 Diesel 4x4,Diesel,8.0
 Mitsubishi,RVR,2026,2.0L 4cyl CVT,Petrol,9.0
@@ -7475,6 +7573,7 @@ Nissan,Cube,2011,1.8L 4cyl Manual,Petrol,8.8
 Nissan,Cube,2010,1.8L 4cyl CVT,Petrol,8.1
 Nissan,Cube,2010,1.8L 4cyl Manual,Petrol,8.7
 Nissan,Dualis,2013,1.6L 4cyl Turbo Diesel,Diesel,4.5
+Nissan,Dualis,2008,2.0 Petrol,Petrol,8.1
 Nissan,Frontier,2026,3.8L 6cyl Auto,Petrol,12.3
 Nissan,Frontier,2025,3.8L 6cyl Auto,Petrol,12.3
 Nissan,Frontier,2014,2.5L 4cyl Auto,Petrol,12.3
@@ -7594,6 +7693,7 @@ Nissan,Maxima,1996,3.0L 6cyl Auto,Petrol,11.2
 Nissan,Maxima,1996,3.0L 6cyl Manual,Petrol,11.1
 Nissan,Maxima,1995,3.0L 6cyl Auto,Petrol,11.2
 Nissan,Maxima,1995,3.0L 6cyl Manual,Petrol,11.0
+Nissan,Micra,2011,1.2 Petrol,Petrol,5.9
 Nissan,Micra,2010,1.2L 3cyl Normal Petrol,Petrol,5.9
 Nissan,Micra,2010,1.5L 4cyl Normal Petrol,Petrol,6.5
 Nissan,Micra,2009,1.4L 4cyl Normal Petrol,Petrol,6.7
@@ -7629,16 +7729,19 @@ Nissan,NV200 Cargo Van,2013,2.0L 4cyl CVT,Petrol,9.3
 Nissan,Pathfinder,2026,3.5L 6cyl Auto,Petrol,10.8
 Nissan,Pathfinder,2025,3.5L 6cyl Auto,Petrol,10.6
 Nissan,Pathfinder,2014,3.5L 6cyl CVT,Petrol,10.8
+Nissan,Pathfinder,2014,3.5 V6 Petrol,Petrol,10.0
 Nissan,Pathfinder,2013,3.5L 6cyl CVT,Petrol,10.8
 Nissan,Pathfinder,2012,4.0L 6cyl Auto,Petrol,14.5
 Nissan,Pathfinder,2011,4.0L 6cyl Auto,Petrol,14.6
 Nissan,Pathfinder,2010,4.0L 6cyl Auto,Petrol,14.6
+Nissan,Pathfinder,2010,2.5 Diesel 4x4,Diesel,8.5
 Nissan,Pathfinder,2009,4.0L 6cyl Auto,Petrol,14.5
 Nissan,Pathfinder,2009,5.6L 8cyl Auto,Petrol,16.3
 Nissan,Pathfinder,2008,4.0L 6cyl Auto,Petrol,14.7
 Nissan,Pathfinder,2008,5.6L 8cyl Auto,Petrol,16.4
 Nissan,Pathfinder,2007,4.0L 6cyl Auto,Petrol,14.9
 Nissan,Pathfinder,2006,4.0L 6cyl Auto,Petrol,15.2
+Nissan,Pathfinder,2006,4.0 V6 Petrol 4x4,Petrol,12.5
 Nissan,Pathfinder,2004,3.5L 6cyl Auto,Petrol,15.3
 Nissan,Pathfinder,2004,3.5L 6cyl Manual,Petrol,14.8
 Nissan,Pathfinder,2003,3.5L 6cyl Auto,Petrol,15.4
@@ -7665,10 +7768,16 @@ Nissan,Pathfinder Rock Creek,2026,3.5L 6cyl Auto,Petrol,11.2
 Nissan,Pathfinder Rock Creek,2025,3.5L 6cyl Auto,Petrol,11.1
 Nissan,Patrol,2023,5.6 V8 Petrol,Petrol,14.4
 Nissan,Patrol,2021,5.6 V8 Petrol,Petrol,14.4
+Nissan,Pulsar,2017,1.8 Petrol,Petrol,6.7
+Nissan,Pulsar,2015,1.8 Petrol,Petrol,6.7
+Nissan,Pulsar,2014,1.6 Turbo Petrol,Petrol,7.4
+Nissan,Pulsar,2013,1.8 Petrol,Petrol,6.7
 Nissan,Qashqai,2025,1.3L 4cyl Turbo Petrol,Petrol,5.8
 Nissan,Qashqai,2023,1.3 Turbo Petrol,Petrol,6.1
 Nissan,Qashqai,2022,1.3L 4cyl Turbo Petrol,Petrol,6.1
 Nissan,Qashqai,2020,2.0 Petrol,Petrol,6.9
+Nissan,Qashqai,2017,2.0 Petrol,Petrol,6.9
+Nissan,Qashqai,2014,2.0 Petrol,Petrol,6.9
 Nissan,Quest,2014,3.5L 6cyl CVT,Petrol,11.1
 Nissan,Quest,2013,3.5L 6cyl CVT,Petrol,11.1
 Nissan,Quest,2012,3.5L 6cyl CVT,Petrol,11.2
@@ -8709,15 +8818,19 @@ Subaru,Forester,2025,2.5L 4cyl CVT,Petrol,8.3
 Subaru,Forester,2023,2.5 Petrol AWD,Petrol,7.4
 Subaru,Forester,2022,2.5 Petrol AWD,Petrol,7.4
 Subaru,Forester,2019,2.5 Petrol AWD,Petrol,7.4
+Subaru,Forester,2017,2.5 Petrol AWD,Petrol,7.4
 Subaru,Forester,2014,2.0L 4cyl CVT,Petrol,9.5
 Subaru,Forester,2014,2.5L 4cyl CVT,Petrol,8.6
 Subaru,Forester,2014,2.5L 4cyl Manual,Petrol,9.7
+Subaru,Forester,2014,2.5 Petrol AWD,Petrol,8.1
 Subaru,Forester,2013,2.5L 4cyl Auto,Petrol,10.8
 Subaru,Forester,2013,2.5L 4cyl Manual,Petrol,10.2
 Subaru,Forester,2012,2.5L 4cyl Auto,Petrol,10.8
 Subaru,Forester,2012,2.5L 4cyl Manual,Petrol,10.2
 Subaru,Forester,2011,2.5L 4cyl Auto,Petrol,10.9
 Subaru,Forester,2011,2.5L 4cyl Manual,Petrol,10.2
+Subaru,Forester,2011,2.5 Petrol AWD,Petrol,8.9
+Subaru,Forester,2008,2.5 Petrol AWD,Petrol,9.3
 Subaru,Forester,2005,2.5L 4cyl Auto,Petrol,10.6
 Subaru,Forester,2005,2.5L 4cyl Manual,Petrol,10.4
 Subaru,Forester,2004,2.5L 4cyl Auto,Petrol,11.0
@@ -8774,6 +8887,7 @@ Subaru,Impreza,2025,2.5L 4cyl CVT,Petrol,8.2
 Subaru,Impreza,2022,2.0 Petrol AWD,Petrol,7.2
 Subaru,Impreza,2019,2.0 Petrol AWD,Petrol,7.2
 Subaru,Impreza,2016,2.0L 4cyl Normal Petrol 4WD,Petrol,6.6
+Subaru,Impreza,2016,2.0 Petrol AWD,Petrol,7.2
 Subaru,Impreza,2014,2.0L 4cyl CVT,Petrol,7.8
 Subaru,Impreza,2014,2.0L 4cyl Manual,Petrol,8.5
 Subaru,Impreza,2014,2.5L 4cyl Manual,Petrol,11.8
@@ -8782,8 +8896,10 @@ Subaru,Impreza,2013,2.0L 4cyl Manual,Petrol,8.5
 Subaru,Impreza,2013,2.5L 4cyl Manual,Petrol,11.8
 Subaru,Impreza,2012,2.0L 4cyl CVT,Petrol,7.8
 Subaru,Impreza,2012,2.0L 4cyl Manual,Petrol,8.5
+Subaru,Impreza,2012,2.0 Petrol AWD,Petrol,7.0
 Subaru,Impreza,2011,2.5L 4cyl Auto,Petrol,10.5
 Subaru,Impreza,2011,2.5L 4cyl Manual,Petrol,11.4
+Subaru,Impreza,2008,2.0 Petrol AWD,Petrol,8.4
 Subaru,Impreza,2004,2.5L 4cyl Auto,Petrol,10.7
 Subaru,Impreza,2004,2.5L 4cyl Manual,Petrol,11.1
 Subaru,Impreza,2002,2.0L 4cyl Auto,Petrol,12.0
@@ -9028,6 +9144,12 @@ Subaru,Legacy/Outback Wagon,1998,2.5L 4cyl Auto,Petrol,11.6
 Subaru,Legacy/Outback Wagon,1998,2.5L 4cyl Manual,Petrol,11.2
 Subaru,Legacy/Outback Wagon,1997,2.5L 4cyl Auto,Petrol,11.6
 Subaru,Legacy/Outback Wagon,1997,2.5L 4cyl Manual,Petrol,11.5
+Subaru,Liberty,2017,2.5 Petrol AWD,Petrol,7.3
+Subaru,Liberty,2015,2.5 Petrol AWD,Petrol,7.3
+Subaru,Liberty,2012,2.5 Petrol AWD,Petrol,7.9
+Subaru,Liberty,2010,2.5 Petrol AWD,Petrol,8.9
+Subaru,Liberty,2007,2.5 Petrol AWD,Petrol,9.6
+Subaru,Liberty,2004,2.5 Petrol AWD,Petrol,9.4
 Subaru,Outback,2026,2.4L 4cyl CVT,Petrol,9.7
 Subaru,Outback,2026,2.5L 4cyl CVT,Petrol,8.5
 Subaru,Outback,2025,2.4L 4cyl CVT,Petrol,9.5
@@ -9117,6 +9239,8 @@ Subaru,WRX,2012,2.5L 4cyl Manual,Petrol,11.2
 Subaru,WRX STI,2012,2.5L 4cyl Manual,Petrol,12.5
 Subaru,XV,2022,2.0 Petrol AWD,Petrol,7.0
 Subaru,XV,2020,2.0 Petrol AWD,Petrol,7.0
+Subaru,XV,2017,2.0 Petrol AWD,Petrol,7.0
+Subaru,XV,2012,2.0 Petrol AWD,Petrol,7.0
 Subaru,XV Crosstrek,2014,2.0L 4cyl CVT,Petrol,8.5
 Subaru,XV Crosstrek,2014,2.0L 4cyl Manual,Petrol,9.2
 Subaru,XV Crosstrek,2013,2.0L 4cyl CVT,Petrol,8.4
@@ -9469,6 +9593,11 @@ Toyota,4Runner Hybrid,2025,2.4L 4cyl Auto,Petrol,10.0
 Toyota,86,2019,2.0 Petrol,Petrol,8.4
 Toyota,86,2016,2.0L 4cyl Normal Petrol,Petrol,7.1
 Toyota,86,2012,2.0L 4cyl Normal Petrol,Petrol,7.1
+Toyota,Aurion,2016,3.5 V6 Petrol,Petrol,9.3
+Toyota,Aurion,2014,3.5 V6 Petrol,Petrol,9.3
+Toyota,Aurion,2012,3.5 V6 Petrol,Petrol,9.3
+Toyota,Aurion,2009,3.5 V6 Petrol,Petrol,9.7
+Toyota,Aurion,2006,3.5 V6 Petrol,Petrol,9.9
 Toyota,Avalon,2014,3.5L 6cyl Auto,Petrol,9.6
 Toyota,Avalon,2013,3.5L 6cyl Auto,Petrol,9.6
 Toyota,Avalon,2012,3.5L 6cyl Auto,Petrol,10.4
@@ -9503,18 +9632,23 @@ Toyota,Camry,2021,2.5 Petrol,Petrol,7.8
 Toyota,Camry,2021,2.5 Hybrid,Hybrid,4.2
 Toyota,Camry,2018,2.5 Petrol,Petrol,7.8
 Toyota,Camry,2018,2.5 Hybrid,Hybrid,4.5
+Toyota,Camry,2016,2.5 Hybrid,Hybrid,5.2
+Toyota,Camry,2015,2.5 Petrol,Petrol,7.8
 Toyota,Camry,2014,2.5L 4cyl Auto,Petrol,8.2
 Toyota,Camry,2014,3.5L 6cyl Auto,Petrol,9.6
 Toyota,Camry,2013,2.5L 4cyl Auto,Petrol,8.2
 Toyota,Camry,2013,3.5L 6cyl Auto,Petrol,9.4
 Toyota,Camry,2012,2.5L 4cyl Auto,Petrol,8.2
 Toyota,Camry,2012,3.5L 6cyl Auto,Petrol,9.5
+Toyota,Camry,2012,2.5 Petrol,Petrol,7.8
+Toyota,Camry,2012,2.5 Hybrid,Hybrid,5.2
 Toyota,Camry,2011,2.5L 4cyl Auto,Petrol,8.9
 Toyota,Camry,2011,2.5L 4cyl Manual,Petrol,9.0
 Toyota,Camry,2011,3.5L 6cyl Auto,Petrol,10.3
 Toyota,Camry,2010,2.5L 4cyl Auto,Petrol,9.0
 Toyota,Camry,2010,2.5L 4cyl Manual,Petrol,9.3
 Toyota,Camry,2010,3.5L 6cyl Auto,Petrol,10.4
+Toyota,Camry,2010,2.4 Petrol,Petrol,8.3
 Toyota,Camry,2009,2.4L 4cyl Auto,Petrol,9.3
 Toyota,Camry,2009,2.4L 4cyl Manual,Petrol,9.5
 Toyota,Camry,2009,3.5L 6cyl Auto,Petrol,10.4
@@ -9526,6 +9660,7 @@ Toyota,Camry,2007,2.4L 4cyl Auto,Petrol,9.5
 Toyota,Camry,2007,2.4L 4cyl Manual,Petrol,9.5
 Toyota,Camry,2007,3.5L 6cyl Auto,Petrol,10.4
 Toyota,Camry,2007,3.3L 6cyl Auto,Petrol,11.2
+Toyota,Camry,2007,2.4 Petrol,Petrol,9.0
 Toyota,Camry,2006,2.4L 4cyl Auto,Petrol,9.8
 Toyota,Camry,2006,2.4L 4cyl Manual,Petrol,9.6
 Toyota,Camry,2006,3.0L 6cyl Auto,Petrol,11.1
@@ -9620,10 +9755,12 @@ Toyota,Corolla,2020,1.8 Hybrid,Hybrid,4.2
 Toyota,Corolla,2019,2.0L 4cyl Normal Petrol,Petrol,6.0
 Toyota,Corolla,2018,2.0L 4cyl Normal Petrol,Petrol,6.0
 Toyota,Corolla,2017,1.8L 4cyl Normal Petrol,Petrol,6.4
+Toyota,Corolla,2016,1.8 Petrol,Petrol,6.1
 Toyota,Corolla,2015,1.8L 4cyl Normal Petrol,Petrol,6.1
 Toyota,Corolla,2014,1.8L 4cyl Normal Petrol,Petrol,6.6
 Toyota,Corolla,2013,1.8L 4cyl Auto,Petrol,8.1
 Toyota,Corolla,2013,1.8L 4cyl Manual,Petrol,7.8
+Toyota,Corolla,2013,1.8 Petrol,Petrol,6.6
 Toyota,Corolla,2012,1.8L 4cyl Normal Petrol,Petrol,6.6
 Toyota,Corolla,2011,1.8L 4cyl Auto,Petrol,8.1
 Toyota,Corolla,2011,1.8L 4cyl Manual,Petrol,7.8
@@ -9633,6 +9770,7 @@ Toyota,Corolla,2010,1.8L 4cyl Auto,Petrol,7.9
 Toyota,Corolla,2010,1.8L 4cyl Manual,Petrol,7.8
 Toyota,Corolla,2010,2.4L 4cyl Auto,Petrol,9.4
 Toyota,Corolla,2010,2.4L 4cyl Manual,Petrol,9.6
+Toyota,Corolla,2010,1.8 Petrol,Petrol,7.2
 Toyota,Corolla,2009,1.8L 4cyl Auto,Petrol,7.8
 Toyota,Corolla,2009,1.8L 4cyl Manual,Petrol,7.8
 Toyota,Corolla,2009,2.4L 4cyl Auto,Petrol,9.4
@@ -9641,6 +9779,7 @@ Toyota,Corolla,2008,1.8L 4cyl Auto,Petrol,8.0
 Toyota,Corolla,2008,1.8L 4cyl Manual,Petrol,7.4
 Toyota,Corolla,2007,1.8L 4cyl Auto,Petrol,8.0
 Toyota,Corolla,2007,1.8L 4cyl Manual,Petrol,7.4
+Toyota,Corolla,2007,1.8 Petrol,Petrol,7.4
 Toyota,Corolla,2006,1.8L 4cyl Auto,Petrol,8.0
 Toyota,Corolla,2006,1.8L 4cyl Manual,Petrol,8.3
 Toyota,Corolla,2005,1.8L 4cyl Auto,Petrol,8.0
@@ -9829,6 +9968,11 @@ Toyota,HiLux,2005,3.0 D-4D Diesel 4x4,Diesel,8.5
 Toyota,Kluger,2023,2.5 Hybrid AWD,Hybrid,5.6
 Toyota,Kluger,2021,3.5 V6 AWD,Petrol,8.7
 Toyota,Kluger,2021,2.5 Hybrid AWD,Hybrid,5.6
+Toyota,Kluger,2019,3.5 V6 Petrol AWD,Petrol,9.1
+Toyota,Kluger,2017,3.5 V6 Petrol AWD,Petrol,9.5
+Toyota,Kluger,2014,3.5 V6 Petrol AWD,Petrol,9.5
+Toyota,Kluger,2011,3.5 V6 Petrol AWD,Petrol,10.2
+Toyota,Kluger,2008,3.5 V6 Petrol AWD,Petrol,11.8
 Toyota,LandCruiser,2026,2.4L 4cyl Auto,Petrol,10.1
 Toyota,LandCruiser,2025,2.4L 4cyl Auto,Petrol,10.1
 Toyota,LandCruiser,2024,3.3 V6 Diesel,Diesel,8.9
@@ -9882,18 +10026,22 @@ Toyota,RAV4,2024,2.5 Hybrid AWD,Hybrid,4.7
 Toyota,RAV4,2023,2.5 Hybrid AWD,Hybrid,4.7
 Toyota,RAV4,2021,2.0L 4cyl Normal Petrol,Petrol,6.0
 Toyota,RAV4,2019,2.0L 4cyl Normal Petrol,Petrol,6.5
+Toyota,RAV4,2016,2.0 Petrol,Petrol,6.5
 Toyota,RAV4,2014,2.5L 4cyl Auto,Petrol,9.3
+Toyota,RAV4,2014,2.5 Petrol AWD,Petrol,8.5
 Toyota,RAV4,2013,2.5L 4cyl Auto,Petrol,9.3
 Toyota,RAV4,2012,2.5L 4cyl Auto,Petrol,9.8
 Toyota,RAV4,2012,3.5L 6cyl Auto,Petrol,10.8
 Toyota,RAV4,2011,2.5L 4cyl Auto,Petrol,9.8
 Toyota,RAV4,2011,3.5L 6cyl Auto,Petrol,10.8
+Toyota,RAV4,2011,2.4 Petrol AWD,Petrol,9.2
 Toyota,RAV4,2010,2.5L 4cyl Auto,Petrol,9.8
 Toyota,RAV4,2010,3.5L 6cyl Auto,Petrol,10.8
 Toyota,RAV4,2009,2.5L 4cyl Auto,Petrol,9.9
 Toyota,RAV4,2009,3.5L 6cyl Auto,Petrol,11.0
 Toyota,RAV4,2008,2.4L 4cyl Auto,Petrol,10.4
 Toyota,RAV4,2008,3.5L 6cyl Auto,Petrol,11.0
+Toyota,RAV4,2008,2.4 Petrol AWD,Petrol,9.6
 Toyota,RAV4,2007,2.4L 4cyl Auto,Petrol,10.5
 Toyota,RAV4,2007,3.5L 6cyl Auto,Petrol,11.0
 Toyota,RAV4,2006,2.4L 4cyl Auto,Petrol,10.4
@@ -10068,6 +10216,10 @@ Toyota,Tacoma,1996,3.4L 6cyl Manual,Petrol,13.6
 Toyota,Tacoma,1996,2.7L 4cyl Manual,Petrol,13.2
 Toyota,Tacoma Hybrid,2026,2.4L 4cyl Auto,Petrol,10.2
 Toyota,Tacoma Hybrid,2025,2.4L 4cyl Auto,Petrol,10.2
+Toyota,Tarago,2015,3.5 V6 Petrol,Petrol,10.2
+Toyota,Tarago,2012,2.4 Petrol,Petrol,9.9
+Toyota,Tarago,2009,3.5 V6 Petrol,Petrol,10.8
+Toyota,Tarago,2006,2.4 Petrol,Petrol,10.2
 Toyota,Tercel,1999,1.5L 4cyl Auto,Petrol,8.4
 Toyota,Tercel,1999,1.5L 4cyl Manual,Petrol,8.2
 Toyota,Tercel,1998,1.5L 4cyl Auto,Petrol,8.6
@@ -10134,12 +10286,14 @@ Toyota,Yaris,2023,1.5 Hybrid,Hybrid,3.3
 Toyota,Yaris,2020,1.5L 3cyl Normal Petrol,Petrol,4.9
 Toyota,Yaris,2016,1.3L 4cyl Normal Petrol,Petrol,5.8
 Toyota,Yaris,2016,1.5L 4cyl Normal Petrol,Petrol,5.9
+Toyota,Yaris,2015,1.3 Petrol,Petrol,5.7
 Toyota,Yaris,2014,1.5L 4cyl Auto,Petrol,7.3
 Toyota,Yaris,2014,1.5L 4cyl Manual,Petrol,7.1
 Toyota,Yaris,2013,1.5L 4cyl Auto,Petrol,7.3
 Toyota,Yaris,2013,1.5L 4cyl Manual,Petrol,7.1
 Toyota,Yaris,2012,1.5L 4cyl Auto,Petrol,7.4
 Toyota,Yaris,2012,1.5L 4cyl Manual,Petrol,7.1
+Toyota,Yaris,2012,1.3 Petrol,Petrol,5.7
 Toyota,Yaris,2011,1.3L 4cyl Normal Petrol,Petrol,5.7
 Toyota,Yaris,2011,1.5L 4cyl Normal Petrol,Petrol,5.8
 Toyota,Yaris,2010,1.5L 4cyl Auto,Petrol,7.5
@@ -10147,6 +10301,7 @@ Toyota,Yaris,2010,1.5L 4cyl Manual,Petrol,7.4
 Toyota,Yaris,2009,1.5L 4cyl Normal Petrol,Petrol,6.1
 Toyota,Yaris,2008,1.3L 4cyl Normal Petrol,Petrol,6.0
 Toyota,Yaris,2008,1.5L 4cyl Normal Petrol,Petrol,6.1
+Toyota,Yaris,2008,1.3 Petrol,Petrol,6.0
 Toyota,Yaris,2007,1.5L 4cyl Auto,Petrol,7.5
 Toyota,Yaris,2007,1.5L 4cyl Manual,Petrol,7.4
 Toyota,Yaris,2006,1.5L 4cyl Auto,Petrol,7.7
@@ -10278,6 +10433,7 @@ Volkswagen,Golf,2018,2.0L 4cyl Turbo Petrol 4WD,Petrol,7.2
 Volkswagen,Golf,2017,2.0L 4cyl Turbo Petrol,Petrol,6.5
 Volkswagen,Golf,2017,2.0L 4cyl Turbo Petrol 4WD,Petrol,7.2
 Volkswagen,Golf,2016,2.0L 4cyl Turbo Petrol,Petrol,7.1
+Volkswagen,Golf,2016,1.4 TSI Petrol,Petrol,5.2
 Volkswagen,Golf,2015,2.0L 4cyl Turbo Diesel,Diesel,4.7
 Volkswagen,Golf,2015,1.4L 4cyl Turbo Petrol,Petrol,5.2
 Volkswagen,Golf,2015,2.0L 4cyl Turbo Petrol,Petrol,6.2
@@ -10288,6 +10444,7 @@ Volkswagen,Golf,2014,2.0L 4cyl Turbo Petrol,Petrol,6.2
 Volkswagen,Golf,2014,2.0L 4cyl Turbo Petrol 4WD,Petrol,7.1
 Volkswagen,Golf,2013,1.4L 4cyl Turbo Petrol,Petrol,5.2
 Volkswagen,Golf,2013,2.0L 4cyl Turbo Petrol 4WD,Petrol,8.7
+Volkswagen,Golf,2013,1.4 TSI Petrol,Petrol,5.2
 Volkswagen,Golf,2012,2.0L 4cyl Turbo Petrol,Petrol,8.2
 Volkswagen,Golf,2012,2.0L 4cyl Turbo Petrol 4WD,Petrol,8.7
 Volkswagen,Golf,2011,2.5L 5cyl Auto,Petrol,9.2
@@ -10295,6 +10452,7 @@ Volkswagen,Golf,2011,2.5L 5cyl Manual,Petrol,9.5
 Volkswagen,Golf,2010,1.4L 4cyl Turbo Diesel,Diesel,4.9
 Volkswagen,Golf,2009,1.4L 4cyl Turbo Petrol,Petrol,6.2
 Volkswagen,Golf,2009,1.4L 4cyl Supercharged Petrol,Petrol,6.5
+Volkswagen,Golf,2009,1.4 TSI Petrol,Petrol,6.2
 Volkswagen,Golf,2008,2.0L 4cyl Turbo Petrol,Petrol,8.1
 Volkswagen,Golf,2007,1.4L 4cyl Turbo Petrol,Petrol,7.7
 Volkswagen,Golf,2006,1.6L 4cyl Normal Petrol,Petrol,7.5
@@ -10445,6 +10603,7 @@ Volkswagen,Jetta,2011,2.0L 4cyl Auto,Petrol,9.5
 Volkswagen,Jetta,2011,2.0L 4cyl Manual,Petrol,9.0
 Volkswagen,Jetta,2011,2.5L 5cyl Auto,Petrol,9.2
 Volkswagen,Jetta,2011,2.5L 5cyl Manual,Petrol,9.5
+Volkswagen,Jetta,2011,1.4 TSI Petrol,Petrol,6.3
 Volkswagen,Jetta,2010,1.6L 4cyl Turbo Diesel,Diesel,4.9
 Volkswagen,Jetta,2009,1.4L 4cyl Supercharged Petrol,Petrol,6.6
 Volkswagen,Jetta,2008,2.0L 4cyl Auto,Petrol,9.6
@@ -10658,12 +10817,14 @@ Volkswagen,Passat,2013,3.6L 6cyl Auto,Petrol,10.7
 Volkswagen,Passat,2012,2.5L 5cyl Auto,Petrol,9.6
 Volkswagen,Passat,2012,2.5L 5cyl Manual,Petrol,9.8
 Volkswagen,Passat,2012,3.6L 6cyl Auto,Petrol,10.7
+Volkswagen,Passat,2012,2.0 Diesel,Diesel,5.8
 Volkswagen,Passat,2010,2.0L 4cyl Auto,Petrol,9.6
 Volkswagen,Passat,2010,2.0L 4cyl Manual,Petrol,9.8
 Volkswagen,Passat,2009,2.0L 4cyl Auto,Petrol,10.5
 Volkswagen,Passat,2009,2.0L 4cyl Manual,Petrol,9.8
 Volkswagen,Passat,2008,2.0L 4cyl Auto,Petrol,10.5
 Volkswagen,Passat,2008,2.0L 4cyl Manual,Petrol,9.9
+Volkswagen,Passat,2008,2.0 Diesel,Diesel,6.7
 Volkswagen,Passat,2007,2.0L 4cyl Auto,Petrol,10.5
 Volkswagen,Passat,2007,2.0L 4cyl Manual,Petrol,10.0
 Volkswagen,Passat,2007,3.6L 6cyl Auto,Petrol,11.8
@@ -10830,6 +10991,7 @@ Volkswagen,Polo,2015,1.2L 4cyl Turbo Petrol,Petrol,4.8
 Volkswagen,Polo,2015,1.8L 4cyl Turbo Petrol,Petrol,5.7
 Volkswagen,Polo,2014,1.2L 4cyl Turbo Petrol,Petrol,5.5
 Volkswagen,Polo,2014,1.4L 4cyl Turbo Petrol,Petrol,6.1
+Volkswagen,Polo,2014,1.2 TSI Petrol,Petrol,4.9
 Volkswagen,Polo,2013,1.2L 4cyl Turbo Petrol,Petrol,5.5
 Volkswagen,Polo,2013,1.4L 4cyl Turbo Petrol,Petrol,6.1
 Volkswagen,Polo,2012,1.2L 4cyl Turbo Petrol,Petrol,5.5
@@ -10837,6 +10999,7 @@ Volkswagen,Polo,2012,1.4L 4cyl Turbo Petrol,Petrol,6.1
 Volkswagen,Polo,2011,1.2L 4cyl Turbo Petrol,Petrol,5.5
 Volkswagen,Polo,2011,1.4L 4cyl Supercharged Petrol,Petrol,6.1
 Volkswagen,Polo,2010,1.2L 4cyl Turbo Petrol,Petrol,5.5
+Volkswagen,Polo,2010,1.6 Petrol,Petrol,6.5
 Volkswagen,Polo,2007,1.4L 4cyl Normal Petrol,Petrol,7.3
 Volkswagen,Polo,2006,1.9L 4cyl Turbo Diesel,Diesel,5.0
 Volkswagen,Polo,2006,1.4L 4cyl Normal Petrol,Petrol,6.5
@@ -10873,11 +11036,13 @@ Volkswagen,Tiguan,2020,2.0 TSI Petrol AWD,Petrol,8.1
 Volkswagen,Tiguan,2020,2.0 TDI Diesel AWD,Diesel,6.2
 Volkswagen,Tiguan,2018,2.0L 4cyl Turbo Petrol 4WD,Petrol,8.1
 Volkswagen,Tiguan,2017,2.0L 4cyl Turbo Petrol 4WD,Petrol,8.1
+Volkswagen,Tiguan,2017,2.0 TSI Petrol AWD,Petrol,8.1
 Volkswagen,Tiguan,2016,2.0L 4cyl Turbo Petrol 4WD,Petrol,8.1
 Volkswagen,Tiguan,2014,2.0L 4cyl Auto,Petrol,10.7
 Volkswagen,Tiguan,2014,2.0L 4cyl Manual,Petrol,11.6
 Volkswagen,Tiguan,2013,2.0L 4cyl Auto,Petrol,10.0
 Volkswagen,Tiguan,2013,2.0L 4cyl Manual,Petrol,11.5
+Volkswagen,Tiguan,2013,2.0 TSI Petrol AWD,Petrol,8.2
 Volkswagen,Tiguan,2012,2.0L 4cyl Auto,Petrol,10.1
 Volkswagen,Tiguan,2012,2.0L 4cyl Manual,Petrol,11.5
 Volkswagen,Tiguan,2011,2.0L 4cyl Auto,Petrol,10.9
@@ -10886,6 +11051,7 @@ Volkswagen,Tiguan,2010,2.0L 4cyl Auto,Petrol,11.4
 Volkswagen,Tiguan,2010,2.0L 4cyl Manual,Petrol,11.0
 Volkswagen,Tiguan,2009,2.0L 4cyl Auto,Petrol,11.4
 Volkswagen,Tiguan,2009,2.0L 4cyl Manual,Petrol,11.0
+Volkswagen,Tiguan,2009,2.0 TSI Petrol AWD,Petrol,8.6
 Volkswagen,Tiguan 4MOTION,2026,2.0L 4cyl Auto,Petrol,9.2
 Volkswagen,Tiguan 4MOTION,2025,2.0L 4cyl Auto,Petrol,9.3
 Volkswagen,Tiguan 4MOTION,2014,2.0L 4cyl Auto,Petrol,10.7
