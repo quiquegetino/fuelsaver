@@ -120,6 +120,13 @@ async function api(path, params) {
 
 const fmtMoney = (n) => "$" + n.toFixed(2);
 const fmtMin = (n) => Math.round(n) + " min";
+// Clamp a numeric input to [lo, hi]; fall back to `dflt` if blank/not a number.
+// Prevents negative or absurd values in litres / economy / radius fields.
+const clampNum = (raw, lo, hi, dflt) => {
+  const n = Number(raw);
+  if (raw === "" || Number.isNaN(n)) return dflt;
+  return Math.min(hi, Math.max(lo, n));
+};
 // Deep links to open a station in the user's map app of choice.
 const mapsUrl = (s) =>
   `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`;
@@ -367,7 +374,7 @@ function FuelFinder() {
             <button className="ff-btn" onClick={locate}>Use my location</button>
             <input className="ff-input"
               placeholder={mode === "route" ? "Start suburb (or use my location)" : "Suburb (e.g. Bayswater)"}
-              value={suburb} onChange={(e) => setSuburb(e.target.value)} />
+              value={suburb} onChange={(e) => { setSuburb(e.target.value); setOrigin(null); }} />
             {origin && <span className="ff-coords">{origin.lat.toFixed(4)}, {origin.lng.toFixed(4)}</span>}
             {mode === "route" && (
               <input className="ff-input" placeholder="Destination (e.g. Geraldton)"
@@ -385,16 +392,16 @@ function FuelFinder() {
               </select>
             </label>
             <label>Litres this fill
-              <input type="number" value={fillLitres} min={1}
-                onChange={(e) => setFillLitres(Number(e.target.value))} />
+              <input type="number" value={fillLitres} min={1} max={500}
+                onChange={(e) => setFillLitres(clampNum(e.target.value, 1, 500, 45))} />
             </label>
             <label>Economy (L/100km){economyAuto ? " · auto" : ""}
-              <input type="number" step="0.1" value={lPer100}
-                onChange={(e) => { setLPer100(Number(e.target.value)); setEconomyAuto(false); }} />
+              <input type="number" step="0.1" value={lPer100} min={0.1} max={40}
+                onChange={(e) => { setLPer100(clampNum(e.target.value, 0.1, 40, 8.5)); setEconomyAuto(false); }} />
             </label>
             <label style={{display: mode === "route" ? "none" : "block"}}>Search radius (km)
-              <input type="number" step="5" min={1} max={200} value={radiusKm}
-                onChange={(e) => setRadiusKm(Math.min(200, Number(e.target.value)))} />
+              <input type="number" step="5" value={radiusKm} min={1} max={200}
+                onChange={(e) => setRadiusKm(clampNum(e.target.value, 1, 200, 20))} />
             </label>
           </div>
         </div>
@@ -415,7 +422,7 @@ function FuelFinder() {
                 {vModels.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </label>
-            <label>Year
+            <label>Model year
               <select value={vehicle.year} disabled={!vehicle.model}
                 onChange={(e) => onYearChange(e.target.value)}>
                 <option value="">{vehicle.model ? "Select year…" : "Pick model first"}</option>
@@ -423,6 +430,13 @@ function FuelFinder() {
               </select>
             </label>
           </div>
+          {vehicle.model && !vehicle.year && (
+            <p className="ff-hint">
+              Not sure which year? Pick the one on or just before when your car was built.
+              Car models only change every few years, so if your exact year isn't listed,
+              choose the closest earlier one — the fuel economy will be the same.
+            </p>
+          )}
           {lpgWarning && (
             <p className="ff-hint" style={{color:"#b26a00"}}>
               <strong>Note:</strong> Manufacturer fuel-consumption data doesn't cover
@@ -521,7 +535,7 @@ function FuelFinder() {
             </p>
           )}
           <p className="ff-hint">
-            Checked {routeResult.anchorsQueried} areas across {routeResult.samplePoints} points along your route. Routes via OSRM.
+            Checked {routeResult.regionsQueried} regions across {routeResult.samplePoints} points along your route. Routes via OSRM.
           </p>
         </div>
       )}
