@@ -498,18 +498,19 @@ async def geocode(suburb: str):
 
 @app.get("/api/reverse")
 async def reverse(lat: float, lng: float):
-    # Reverse-geocode via Nominatim, but never let its failures (rate limits,
-    # timeouts, non-JSON) crash the request — a missing suburb name shouldn't
-    # break the app, since searches work from coordinates anyway.
+    # Derive the suburb from the nearest FuelWatch station rather than an
+    # external geocoder. FuelWatch stations each carry their suburb and
+    # coordinates, and we already fetch them (cached), so this is fast and has
+    # no dependency on Nominatim's flaky free tier. Falls back to empty if no
+    # stations are available (searches still work from coordinates).
     try:
-        r = await _get(f"{NOMINATIM}/reverse",
-                       params={"format": "json", "lat": lat, "lon": lng, "zoom": 14})
-        a = r.json().get("address", {})
-        suburb = (a.get("suburb") or a.get("town") or a.get("city")
-                  or a.get("village") or a.get("municipality") or "")
-    except (httpx.HTTPError, ValueError, KeyError):
-        suburb = ""
-    return {"suburb": suburb}
+        stations = await _fetch_all_stations(1)  # ULP list covers all sites
+    except httpx.HTTPError:
+        stations = []
+    if not stations:
+        return {"suburb": ""}
+    nearest = min(stations, key=lambda s: _haversine(lat, lng, s["lat"], s["lng"]))
+    return {"suburb": nearest.get("suburb", "")}
 
 
 @app.get("/api/fuel")
