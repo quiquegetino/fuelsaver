@@ -29,6 +29,12 @@
   .ff-hint { font-size: 12px; color: #999; margin: 8px 0 0; }
   .ff-status { color: #1a5fa5; font-size: 14px; margin: 12px 0 0; }
   .ff-error { color: #c0392b; font-size: 14px; margin: 12px 0 0; }
+  .ff-retry { margin-top: 8px; height: 32px; padding: 0 14px; font-size: 13px; border-color: #c0392b; color: #c0392b; }
+  .ff-retry:hover { background: #fdf0ee; }
+  .ff-tow { margin-top: 14px; padding-top: 12px; border-top: 1px solid #eee; }
+  .ff-check { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .ff-check input { width: 16px; height: 16px; cursor: pointer; }
+  .ff-tow-fields { margin-top: 10px; }
   .ff-verdict { font-size: 16px; margin: 0 0 16px; padding: 12px; border-radius: 8px; background: #f5f5f5; }
   .ff-modes { display: flex; gap: 8px; margin-bottom: 12px; }
   .ff-mode { flex: 1; height: 40px; border: 1px solid #1a5fa5; background: #fff; color: #1a5fa5; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
@@ -111,7 +117,13 @@ async function api(path, params) {
   const qs = new URLSearchParams(params).toString();
   let res;
   try {
-    res = await fetch(`${API}${path}?${qs}`);
+    // cache: "no-store" plus a per-call cache-buster so a retry never re-serves
+    // a stale or failed response from the browser/CDN cache. Without this a
+    // one-off error can appear "stuck" until the user hard-refreshes.
+    res = await fetch(`${API}${path}?${qs}&_=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    });
   } catch (e) {
     throw new Error(
       "Couldn't reach the FuelSave service. It may be waking up — " +
@@ -128,6 +140,38 @@ async function api(path, params) {
 
 const fmtMoney = (n) => "$" + n.toFixed(2);
 const fmtMin = (n) => Math.round(n) + " min";
+
+// ---------------------------------------------------------------------------
+// Towing fuel-consumption model.
+// Towing raises consumption through two effects: extra mass (engine works
+// harder, especially accelerating and climbing) and aerodynamic drag (a tall
+// boxy caravan punches a much bigger hole in the air than a low jet-ski).
+// We model it as a percentage uplift that scales with towed mass, weighted by
+// how aerodynamically bad the load is:
+//     uplift = (weight / 100) * 1.5% * aeroFactor
+// Sanity check against real-world reports: a 2,000 kg caravan gives ~+41%,
+// a 1,200 kg camper ~+18%, an 800 kg boat ~+10%, a 400 kg jet-ski ~+5% —
+// all in line with what owners actually see. Capped at +80% so extreme
+// inputs stay plausible. This is an ESTIMATE, not a measured figure.
+const TOW_TYPES = [
+  { id: "caravan",  label: "Caravan",              aero: 1.35, typical: 2000 },
+  { id: "camper",   label: "Camper trailer",       aero: 1.00, typical: 1200 },
+  { id: "boat",     label: "Boat on trailer",      aero: 0.85, typical: 900 },
+  { id: "jetski",   label: "Jet ski / small trailer", aero: 0.75, typical: 450 },
+  { id: "box",      label: "Box / utility trailer", aero: 1.00, typical: 700 },
+  { id: "horse",    label: "Horse float",          aero: 1.25, typical: 1800 },
+];
+const RATE_PER_100KG = 0.015;   // 1.5% more fuel per 100 kg towed
+const MAX_TOW_UPLIFT = 0.80;    // never claim more than +80%
+
+function towingMultiplier(isTowing, typeId, weightKg) {
+  if (!isTowing) return 1;
+  const w = Number(weightKg);
+  if (!w || w <= 0) return 1;
+  const type = TOW_TYPES.find((t) => t.id === typeId) || TOW_TYPES[0];
+  const uplift = Math.min((w / 100) * RATE_PER_100KG * type.aero, MAX_TOW_UPLIFT);
+  return 1 + uplift;
+}
 // Clamp a numeric input to [lo, hi]; fall back to `dflt` if blank/not a number.
 // Prevents negative or absurd values in litres / economy / radius fields.
 const clampNum = (raw, lo, hi, dflt) => {
@@ -160,6 +204,9 @@ function FuelFinder() {
   const [lPer100, setLPer100] = useState(8.5);
   const [fillLitres, setFillLitres] = useState(45);
   const [radiusKm, setRadiusKm] = useState(20);
+  const [towing, setTowing] = useState(false);
+  const [towType, setTowType] = useState("caravan");
+  const [towWeight, setTowWeight] = useState(1500);
   const [vehicle, setVehicle] = useState({ make: "", model: "", year: "" });
   const [vMakes, setVMakes] = useState([]);
   const [vModels, setVModels] = useState([]);
@@ -230,6 +277,12 @@ function FuelFinder() {
   const [error, setError] = useState("");
   const [result, setResult] = useState(null);
 
+  // Any change to the inputs clears a previous error, so the app never looks
+  // "stuck" on a stale message after the user adjusts something.
+  React.useEffect(() => {
+    setError("");
+  }, [suburb, destSuburb, product, fillLitres, lPer100, radiusKm, mode, towing, towType, towWeight]);
+
   const onProductChange = (code) => {
     setProduct(code);
     // If a full vehicle is already chosen, re-fetch its economy for the new
@@ -267,10 +320,14 @@ function FuelFinder() {
 
   const compare = useCallback(async () => {
     setError(""); setResult(null);
-    if (!suburb) { setError("Enter a suburb, or tap \u201CUse my location\u201D."); return; }
+    // A known location is enough — we don't need the suburb name if we already
+    // have coordinates (e.g. the suburb lookup failed but GPS succeeded).
+    if (!suburb && !origin) { setError("Enter a suburb, or tap \u201CUse my location\u201D."); return; }
     // Coerce possibly-in-progress text values to safe numbers.
     const litres = clampNum(fillLitres, 1, 500, 45);
-    const econ = clampNum(lPer100, 0.1, 40, 8.5);
+    const baseEcon = clampNum(lPer100, 0.1, 40, 8.5);
+    const towMult = towingMultiplier(towing, towType, towWeight);
+    const econ = baseEcon * towMult;   // effective consumption incl. towing
     const radius = clampNum(radiusKm, 1, 200, 20);
     try {
       let from = origin;
@@ -328,10 +385,11 @@ function FuelFinder() {
         closest, cheapest, same: closest.name === cheapest.name,
         priceDiffCents, fuelSaved, extraKm, extraFuelCost, netSaving,
         extraTimeMin, count: stations.length, searchNote,
+        towing, towMult, baseEcon, econ,
       });
       setLoading("");
     } catch (e) { setError(e.message || "Something went wrong."); setLoading(""); }
-  }, [origin, suburb, product, fillLitres, lPer100, radiusKm]);
+  }, [origin, suburb, product, fillLitres, lPer100, radiusKm, towing, towType, towWeight]);
 
   // Find cheapest fuel along a route from origin to destination.
   const searchRoute = useCallback(async () => {
@@ -350,22 +408,28 @@ function FuelFinder() {
       const to = await api("/api/geocode", { suburb: destSuburb });
 
       setLoading("Finding fuel along your route… (this can take a moment)");
+      const baseEcon = clampNum(lPer100, 0.1, 40, 8.5);
+      const towMult = towingMultiplier(towing, towType, towWeight);
+      const econ = baseEcon * towMult;
       const resp = await api("/api/fuel-route", {
         product,
         from: `${from.lat},${from.lng}`,
         to: `${to.lat},${to.lng}`,
         fill_litres: clampNum(fillLitres, 1, 500, 45),
-        l_per_100km: clampNum(lPer100, 0.1, 40, 8.5),
+        l_per_100km: econ,
         max_detour_km: 5,
       });
       if (!resp.stations || !resp.stations.length) {
         setError(`No fuel stations found within 5 km of your route right now.`);
         setLoading(""); return;
       }
-      setRouteResult({ ...resp, from, to });
+      // Fuel needed for the trip at the effective (towing-adjusted) rate —
+      // the practical number when you're working out how many stops you need.
+      const tripLitres = (resp.routeKm / 100) * econ;
+      setRouteResult({ ...resp, from, to, towing, towMult, baseEcon, econ, tripLitres });
       setLoading("");
     } catch (e) { setError(e.message || "Something went wrong."); setLoading(""); }
-  }, [origin, suburb, destSuburb, product, fillLitres, lPer100]);
+  }, [origin, suburb, destSuburb, product, fillLitres, lPer100, towing, towType, towWeight]);
 
   return (
     <div className="ff">
@@ -423,6 +487,50 @@ function FuelFinder() {
                 onChange={(e) => setRadiusKm(e.target.value)}
                 onBlur={(e) => setRadiusKm(clampNum(e.target.value, 1, 200, 20))} />
             </label>
+          </div>
+          <div className="ff-tow">
+            <label className="ff-check">
+              <input type="checkbox" checked={towing}
+                onChange={(e) => {
+                  setTowing(e.target.checked);
+                  if (e.target.checked) {
+                    const t = TOW_TYPES.find((x) => x.id === towType);
+                    if (t) setTowWeight(t.typical);
+                  }
+                }} />
+              <span>I'm towing something</span>
+            </label>
+            {towing && (
+              <div className="ff-grid ff-tow-fields">
+                <label>What are you towing?
+                  <select value={towType}
+                    onChange={(e) => {
+                      setTowType(e.target.value);
+                      const t = TOW_TYPES.find((x) => x.id === e.target.value);
+                      if (t) setTowWeight(t.typical);
+                    }}>
+                    {TOW_TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+                  </select>
+                </label>
+                <label>Approx. weight (kg)
+                  <input type="number" step="50" value={towWeight} min={50} max={4500}
+                    onChange={(e) => setTowWeight(e.target.value)}
+                    onBlur={(e) => setTowWeight(clampNum(e.target.value, 50, 4500, 1500))} />
+                </label>
+              </div>
+            )}
+            {towing && (
+              <p className="ff-hint">
+                Towing {towWeight} kg{" "}
+                {(TOW_TYPES.find((t) => t.id === towType) || {}).label ?
+                  `(${(TOW_TYPES.find((t) => t.id === towType) || {}).label.toLowerCase()})` : ""}{" "}
+                is estimated to raise your consumption by about{" "}
+                <strong>{Math.round((towingMultiplier(towing, towType, towWeight) - 1) * 100)}%</strong> —
+                roughly <strong>{(clampNum(lPer100, 0.1, 40, 8.5) * towingMultiplier(towing, towType, towWeight)).toFixed(1)} L/100km</strong>{" "}
+                instead of {clampNum(lPer100, 0.1, 40, 8.5).toFixed(1)}. This is an estimate;
+                real figures vary with speed, terrain, wind and how the load sits.
+              </p>
+            )}
           </div>
         </div>
 
@@ -487,7 +595,15 @@ function FuelFinder() {
           <button className="ff-btn ff-primary" onClick={searchRoute}>Find cheapest fuel on my route</button>
         )}
         {loading && <p className="ff-status">{loading}</p>}
-        {error && <p className="ff-error">{error}</p>}
+        {error && (
+          <div className="ff-error">
+            <p style={{margin: 0}}>{error}</p>
+            <button className="ff-btn ff-retry"
+              onClick={() => { setError(""); mode === "near" ? compare() : searchRoute(); }}>
+              Try again
+            </button>
+          </div>
+        )}
       </div>
 
       {mode === "near" && result && (
@@ -507,6 +623,9 @@ function FuelFinder() {
             <tr><td>Price difference</td><td>{result.priceDiffCents.toFixed(1)} c/L</td></tr>
             <tr><td>Saved on {fillLitres} L fill</td><td>{fmtMoney(result.fuelSaved)}</td></tr>
             <tr><td>Extra distance (round trip)</td><td>{result.extraKm.toFixed(1)} km</td></tr>
+            {result.towing && (
+              <tr><td>Consumption used (towing)</td><td>{result.econ.toFixed(1)} L/100km <span style={{color:"#b26a00"}}>(+{Math.round((result.towMult - 1) * 100)}%)</span></td></tr>
+            )}
             <tr><td>Extra fuel burned</td><td>{fmtMoney(result.extraFuelCost)}</td></tr>
             <tr className="ff-net"><td>Net saving</td><td>{fmtMoney(result.netSaving)}</td></tr>
             <tr><td>Extra time (round trip)</td><td>{fmtMin(result.extraTimeMin)}</td></tr>
@@ -526,6 +645,17 @@ function FuelFinder() {
               ? " — right on your route."
               : ` — about ${routeResult.stations[0].offRouteKm} km off your route.`}
           </p>
+          {routeResult.towing && (
+            <p className="ff-hint" style={{color:"#b26a00"}}>
+              <strong>Towing:</strong> at {routeResult.econ.toFixed(1)} L/100km
+              (+{Math.round((routeResult.towMult - 1) * 100)}% over your {routeResult.baseEcon.toFixed(1)} solo figure),
+              this {routeResult.routeKm} km trip needs roughly{" "}
+              <strong>{Math.round(routeResult.tripLitres)} L</strong> of fuel —
+              about {Math.max(1, Math.ceil(routeResult.tripLitres / clampNum(fillLitres, 1, 500, 45)))} fill
+              {Math.max(1, Math.ceil(routeResult.tripLitres / clampNum(fillLitres, 1, 500, 45))) === 1 ? "" : "s"}{" "}
+              at {clampNum(fillLitres, 1, 500, 45)} L a time. Plan your stops accordingly.
+            </p>
+          )}
           <p className="ff-hint">
             Ranked by real cost: pump price for a {fillLitres} L fill plus the fuel
             burned detouring off your route. Showing the best {routeResult.stations.length}
