@@ -21,8 +21,6 @@ Run:
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from math import radians, sin, cos, asin, sqrt
-import xml.etree.ElementTree as ET
-import asyncio
 import csv
 import os
 from datetime import datetime, timedelta, timezone
@@ -80,79 +78,6 @@ NOMINATIM = "https://nominatim.openstreetmap.org"
 OSRM = "https://router.project-osrm.org"
 HEADERS = {"User-Agent": "FuelFinderWA/0.2 (prototype)"}
 
-# FuelWatch-covered suburbs and towns used to seed searches. Covers the full
-# Perth metro area plus regional centres from Geraldton (north) to Esperance
-# (south), and the wheatbelt/goldfields in between. Used two ways:
-#  - fallback when the user's own suburb returns nothing
-#  - the metro/region-wide search pools stations across nearby anchors
-# Extend freely; more anchors = better coverage but more FuelWatch calls.
-ANCHOR_SUBURBS = [
-    # --- Perth metro: north ---
-    ("Two Rocks", -31.4980, 115.5880),
-    ("Yanchep", -31.5480, 115.6330),
-    ("Butler", -31.6410, 115.7050),
-    ("Clarkson", -31.6790, 115.7290),
-    ("Joondalup", -31.7448, 115.7661),
-    ("Wanneroo", -31.7500, 115.8000),
-    ("Hillarys", -31.8090, 115.7440),
-    ("Ellenbrook", -31.7700, 115.9660),
-    # --- Perth metro: central-north ---
-    ("Scarborough", -31.8940, 115.7590),
-    ("Innaloo", -31.8930, 115.7960),
-    ("Balcatta", -31.8720, 115.8280),
-    ("Osborne Park", -31.8990, 115.8130),
-    ("Morley", -31.8880, 115.9090),
-    ("Bayswater", -31.9195, 115.9290),
-    ("Midland", -31.8880, 116.0100),
-    ("Midvale", -31.8860, 116.0230),
-    ("Mundaring", -31.9010, 116.1660),
-    # --- Perth metro: central ---
-    ("Perth", -31.9505, 115.8605),
-    ("Subiaco", -31.9490, 115.8260),
-    ("Victoria Park", -31.9740, 115.9000),
-    ("Belmont", -31.9450, 115.9330),
-    # --- Perth metro: south ---
-    ("Fremantle", -32.0569, 115.7439),
-    ("Cannington", -32.0170, 115.9340),
-    ("Canning Vale", -32.0620, 115.9200),
-    ("Cockburn", -32.1240, 115.8410),
-    ("Success", -32.1400, 115.8500),
-    ("Armadale", -32.1490, 116.0140),
-    ("Byford", -32.2200, 116.0090),
-    ("Kwinana", -32.2390, 115.8290),
-    ("Rockingham", -32.2770, 115.7290),
-    ("Mandurah", -32.5290, 115.7230),
-    ("Pinjarra", -32.6290, 115.8730),
-    # --- Regional: north (toward Geraldton) ---
-    ("Gingin", -31.3480, 115.9060),
-    ("Jurien Bay", -30.3060, 115.0400),
-    ("Moora", -30.6410, 116.0060),
-    ("Dongara", -29.2560, 114.9320),
-    ("Geraldton", -28.7744, 114.6089),
-    # --- Regional: wheatbelt / inland ---
-    ("Northam", -31.6530, 116.6720),
-    ("York", -31.8880, 116.7660),
-    ("Merredin", -31.4820, 118.2790),
-    ("Narrogin", -32.9360, 117.1780),
-    ("Katanning", -33.6910, 117.5550),
-    # --- Regional: goldfields ---
-    ("Kalgoorlie", -30.7490, 121.4660),
-    ("Coolgardie", -30.9540, 121.1640),
-    ("Norseman", -32.1970, 121.7780),
-    # --- Regional: south-west ---
-    ("Harvey", -33.0790, 115.8960),
-    ("Bunbury", -33.3270, 115.6410),
-    ("Busselton", -33.6550, 115.3490),
-    ("Margaret River", -33.9550, 115.0760),
-    ("Collie", -33.3620, 116.1560),
-    ("Manjimup", -34.2410, 116.1460),
-    # --- Regional: south coast (toward Esperance) ---
-    ("Albany", -35.0270, 117.8840),
-    ("Mount Barker", -34.6300, 117.6660),
-    ("Ravensthorpe", -33.5820, 120.0480),
-    ("Esperance", -33.8610, 121.8910),
-]
-
 
 def _haversine(lat1, lng1, lat2, lng2):
     dlat = radians(lat2 - lat1)
@@ -161,40 +86,11 @@ def _haversine(lat1, lng1, lat2, lng2):
     return 2 * 6371 * asin(sqrt(h))
 
 
-def _nearest_anchor(lat, lng):
-    return min(ANCHOR_SUBURBS, key=lambda a: _haversine(lat, lng, a[1], a[2]))
-
-
 async def _get(url, params=None, headers=None):
     async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
         r = await client.get(url, params=params, headers=headers or HEADERS)
         r.raise_for_status()
         return r
-
-
-def _parse_stations(xml_text):
-    root = ET.fromstring(xml_text)
-    out = []
-    for item in root.iter("item"):
-        def txt(tag):
-            el = item.find(tag)
-            return el.text.strip() if el is not None and el.text else ""
-        try:
-            price = float(txt("price"))
-            lat = float(txt("latitude"))
-            lng = float(txt("longitude"))
-        except ValueError:
-            continue
-        out.append({
-            "name": txt("trading-name") or txt("title"),
-            "brand": txt("brand"),
-            "address": txt("address"),
-            "suburb": txt("location"),
-            "price": price,
-            "lat": lat,
-            "lng": lng,
-        })
-    return out
 
 
 def _parse_stations_json(data):
@@ -290,118 +186,6 @@ async def _fetch_all_stations(product):
     return stations
 
 
-# ---------------------------------------------------------------------------
-# FuelWatch regions. This is the authoritative list of every area FuelWatch
-# covers (62 regions spanning all metro sub-regions plus every regional town/
-# shire in the scheme), with approximate centre coordinates. Querying by region
-# returns ALL stations in that whole area in a single call, so region-based
-# search gives complete coverage of FuelWatch's footprint far more efficiently
-# than pooling many individual suburbs. Source: FuelWatch RSS region IDs.
-# ---------------------------------------------------------------------------
-FUELWATCH_REGIONS = [
-    (1, "Boulder", -30.78, 121.49),
-    (2, "Broome", -17.96, 122.24),
-    (3, "Busselton (Townsite)", -33.65, 115.35),
-    (4, "Carnarvon", -24.88, 113.66),
-    (5, "Collie", -33.36, 116.16),
-    (6, "Dampier", -20.66, 116.71),
-    (7, "Esperance", -33.86, 121.89),
-    (8, "Kalgoorlie", -30.75, 121.47),
-    (9, "Karratha", -20.74, 116.85),
-    (10, "Kununurra", -15.77, 128.74),
-    (11, "Narrogin", -32.94, 117.18),
-    (12, "Northam", -31.65, 116.67),
-    (13, "Port Hedland", -20.31, 118.61),
-    (14, "South Hedland", -20.41, 118.60),
-    (15, "Albany", -35.03, 117.88),
-    (16, "Bunbury", -33.33, 115.64),
-    (17, "Geraldton", -28.77, 114.61),
-    (18, "Mandurah", -32.53, 115.72),
-    (19, "Capel", -33.56, 115.57),
-    (20, "Dardanup", -33.40, 115.76),
-    (21, "Greenough", -28.95, 114.74),
-    (22, "Harvey", -33.08, 115.90),
-    (23, "Murray", -32.65, 115.88),
-    (24, "Waroona", -32.84, 115.92),
-    (25, "Metro : North of River", -31.90, 115.83),
-    (26, "Metro : South of River", -32.05, 115.86),
-    (27, "Metro : East/Hills", -31.92, 116.05),
-    (28, "Augusta / Margaret River", -33.95, 115.07),
-    (29, "Busselton (Shire)", -33.65, 115.35),
-    (30, "Bridgetown / Greenbushes", -33.96, 116.14),
-    (31, "Donnybrook / Balingup", -33.57, 115.82),
-    (32, "Manjimup", -34.24, 116.15),
-    (33, "Cataby", -30.75, 115.55),
-    (34, "Coolgardie", -30.95, 121.16),
-    (35, "Cunderdin", -31.65, 117.24),
-    (36, "Dalwallinu", -30.28, 116.66),
-    (37, "Denmark", -34.96, 117.35),
-    (38, "Derby", -17.30, 123.63),
-    (39, "Dongara", -29.26, 114.93),
-    (40, "Exmouth", -21.93, 114.13),
-    (41, "Fitzroy Crossing", -18.19, 125.56),
-    (42, "Jurien", -30.31, 115.04),
-    (43, "Kambalda", -31.20, 121.66),
-    (44, "Kellerberrin", -31.63, 117.72),
-    (45, "Kojonup", -33.83, 117.15),
-    (46, "Meekatharra", -26.59, 118.49),
-    (47, "Moora", -30.64, 116.01),
-    (48, "Mount Barker", -34.63, 117.67),
-    (49, "Newman", -23.36, 119.73),
-    (50, "Norseman", -32.20, 121.78),
-    (51, "Ravensthorpe", -33.58, 120.05),
-    (53, "Tammin", -31.64, 117.49),
-    (54, "Williams", -33.02, 116.88),
-    (55, "Wubin", -30.11, 116.63),
-    (56, "York", -31.89, 116.77),
-    (57, "Regans Ford", -30.98, 115.70),
-    (58, "Meckering", -31.63, 117.01),
-    (59, "Wundowie", -31.76, 116.38),
-    (60, "North Bannister", -32.58, 116.46),
-    (61, "Munglinup", -33.71, 120.79),
-    (62, "Northam (Shire)", -31.65, 116.67),
-    (63, "Bodallin", -31.36, 118.86),
-]
-
-
-async def _fetch_region(product, region_id):
-    """Fetch all stations in a FuelWatch region, using the daily cache."""
-    global _price_cache, _price_cache_day
-    day = _fuelwatch_day()
-    if day != _price_cache_day:
-        _price_cache = {}
-        _price_cache_day = day
-    key = (day, product, f"region:{region_id}")
-    if key in _price_cache:
-        return _price_cache[key]
-    r = await _get(FUELWATCH, params={"Product": product, "Region": region_id})
-    stations = _parse_stations(r.text)
-    _price_cache[key] = stations
-    return stations
-
-
-def _nearest_regions(lat, lng, n=3):
-    """Return the n nearest FuelWatch regions to a point, closest first."""
-    ranked = sorted(FUELWATCH_REGIONS, key=lambda r: _haversine(lat, lng, r[2], r[3]))
-    return ranked[:n]
-
-
-def _nearest_anchors(lat, lng, n=6):
-    """Return the n nearest anchor suburbs, closest first."""
-    ranked = sorted(ANCHOR_SUBURBS, key=lambda a: _haversine(lat, lng, a[1], a[2]))
-    return ranked[:n]
-
-
-def _dedupe(stations):
-    """Merge stations from multiple searches, keyed by name+address."""
-    seen = {}
-    for s in stations:
-        key = (s["name"], s["address"])
-        if key not in seen:
-            seen[key] = s
-    return list(seen.values())
-
-
 def _sample_route(coords, interval_km=25.0):
     """
     Given an ordered list of [lng, lat] route coordinates (GeoJSON order),
@@ -441,6 +225,36 @@ def _dist_point_to_route(lat, lng, route_coords, step=8):
     return best
 
 
+async def _suburb_from_stations(name):
+    """Try to resolve a suburb name to coordinates using FuelWatch station data:
+    if any stations sit in that suburb, return the centroid of their locations.
+    Covers every suburb FuelWatch serves with zero external-geocoder calls.
+    Returns None if the suburb has no stations (caller falls back to Nominatim)."""
+    try:
+        stations = await _fetch_all_stations(1)  # ULP list covers all sites
+    except httpx.HTTPError:
+        return None
+    key = name.strip().lower()
+    matches = [s for s in stations if s.get("suburb", "").strip().lower() == key]
+    if not matches:
+        return None
+    lat = sum(s["lat"] for s in matches) / len(matches)
+    lng = sum(s["lng"] for s in matches) / len(matches)
+    return {"lat": lat, "lng": lng, "name": matches[0]["suburb"]}
+
+
+@app.get("/api/suburbs")
+async def suburbs():
+    """All WA suburbs/towns that currently have a FuelWatch station, sorted.
+    Drives the suburb dropdown in the frontend. Served from the daily cache."""
+    try:
+        stations = await _fetch_all_stations(1)
+    except httpx.HTTPError as e:
+        raise HTTPException(502, f"FuelWatch request failed: {e}")
+    names = sorted({s["suburb"] for s in stations if s.get("suburb")})
+    return {"suburbs": names}
+
+
 @app.get("/api/geocode")
 async def geocode(suburb: str):
     # Basic input sanity: reject empty or obviously non-place input.
@@ -448,6 +262,13 @@ async def geocode(suburb: str):
     if len(q) < 2 or len(q) > 60:
         raise HTTPException(404, f'Please enter a valid WA suburb or town.')
 
+    # First: resolve from FuelWatch's own station data (covers every suburb in
+    # the dropdown, no external geocoder involved).
+    hit = await _suburb_from_stations(q)
+    if hit:
+        return hit
+
+    # Fallback for names FuelWatch doesn't have stations in: Nominatim.
     try:
         r = await _get(f"{NOMINATIM}/search",
                        params={
