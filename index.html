@@ -114,8 +114,9 @@ async function api(path, params) {
     res = await fetch(`${API}${path}?${qs}`);
   } catch (e) {
     throw new Error(
-      "Couldn't reach the backend. Is it running at " + API + "? " +
-      "Start it with: uvicorn main:app --reload --port 8000"
+      "Couldn't reach the FuelSave service. It may be waking up — " +
+      "please wait about 30 seconds and try again. If it keeps happening, " +
+      "check your connection or try again later."
     );
   }
   if (!res.ok) {
@@ -170,9 +171,11 @@ function FuelFinder() {
   const [destSuburb, setDestSuburb] = useState(""); // route destination
   const [routeResult, setRouteResult] = useState(null); // along-route search result
 
-  // Load makes once on mount.
+  // Load makes and the WA suburb list once on mount.
+  const [suburbList, setSuburbList] = useState([]);
   React.useEffect(() => {
     api("/api/vehicle/makes").then(setVMakes).catch(() => {});
+    api("/api/suburbs").then((d) => setSuburbList(d.suburbs || [])).catch(() => {});
   }, []);
 
   // When make changes, load its models and reset downstream.
@@ -383,14 +386,17 @@ function FuelFinder() {
           <span className="ff-num">1</span>
           <div className="ff-step-body">
             <button className="ff-btn" onClick={locate}>Use my location</button>
-            <input className="ff-input"
-              placeholder={mode === "route" ? "Start suburb (or use my location)" : "Suburb (e.g. Bayswater)"}
+            <input className="ff-input" list="wa-suburbs"
+              placeholder={mode === "route" ? "Start suburb — type or pick from list" : "Suburb — type or pick from list"}
               value={suburb} onChange={(e) => { setSuburb(e.target.value); setOrigin(null); }} />
             {origin && <span className="ff-coords">{origin.lat.toFixed(4)}, {origin.lng.toFixed(4)}</span>}
             {mode === "route" && (
-              <input className="ff-input" placeholder="Destination (e.g. Geraldton)"
+              <input className="ff-input" list="wa-suburbs" placeholder="Destination — type or pick from list"
                 value={destSuburb} onChange={(e) => setDestSuburb(e.target.value)} />
             )}
+            <datalist id="wa-suburbs">
+              {suburbList.map((s) => <option key={s} value={s} />)}
+            </datalist>
           </div>
         </div>
 
@@ -549,7 +555,7 @@ function FuelFinder() {
             </p>
           )}
           <p className="ff-hint">
-            Checked {routeResult.regionsQueried} regions across {routeResult.samplePoints} points along your route. Routes via OSRM.
+            Scanned {routeResult.stationsScanned} stations along your route. Routes via OSRM.
           </p>
         </div>
       )}
