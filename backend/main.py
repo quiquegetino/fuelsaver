@@ -63,7 +63,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-FUELWATCH = "https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS"
+FUELWATCH = "https://www.fuelwatch.wa.gov.au/api/sites"
+
+# Maps the numeric product codes used by the frontend to the text fuelType codes
+# the FuelWatch /api/sites endpoint expects. Confirmed against FuelWatch's live
+# API: ULP=ULP, PULP=PUP, Diesel=DSL, Brand Diesel=BDL, LPG=LPG, 98 RON=98R.
+PRODUCT_TO_FUELTYPE = {
+    1: "ULP",   # Unleaded
+    2: "PUP",   # Premium Unleaded (95)
+    4: "DSL",   # Diesel
+    5: "LPG",   # LPG
+    6: "98R",   # 98 RON
+    11: "BDL",  # Brand Diesel
+}
 NOMINATIM = "https://nominatim.openstreetmap.org"
 OSRM = "https://router.project-osrm.org"
 HEADERS = {"User-Agent": "FuelFinderWA/0.2 (prototype)"}
@@ -185,6 +197,41 @@ def _parse_stations(xml_text):
     return out
 
 
+def _parse_stations_json(data):
+    """Parse the FuelWatch /api/sites JSON response into the station format the
+    rest of the app uses. Each entry has siteName, address{line1,location,
+    latitude,longitude}, product{priceToday}, brandName. Stations with no price
+    today or no coordinates are skipped."""
+    out = []
+    for s in data:
+        try:
+            addr = s.get("address") or {}
+            prod = s.get("product") or {}
+            price = prod.get("priceToday")
+            lat = addr.get("latitude")
+            lng = addr.get("longitude")
+            if price is None or lat is None or lng is None:
+                continue
+            price = float(price)
+            lat = float(lat)
+            lng = float(lng)
+        except (ValueError, TypeError):
+            continue
+        line1 = (addr.get("line1") or "").strip()
+        suburb = (addr.get("location") or "").strip()
+        full_addr = f"{line1}, {suburb}".strip(", ") if line1 or suburb else ""
+        out.append({
+            "name": (s.get("siteName") or "").strip(),
+            "brand": (s.get("brandName") or "").strip(),
+            "address": full_addr,
+            "suburb": suburb.title(),
+            "price": price,
+            "lat": lat,
+            "lng": lng,
+        })
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Daily price cache.
 # FuelWatch publishes new prices once a day (around 2:30pm WA time), so there's
@@ -217,20 +264,28 @@ def _fuelwatch_day():
     return day.strftime("%Y-%m-%d")
 
 
-async def _fetch_stations(product, suburb):
-    """Fetch stations for a product+suburb, using the daily cache. Only calls
-    FuelWatch when this suburb isn't already cached for the current day."""
+async def _fetch_all_stations(product):
+    """Fetch ALL WA stations for a fuel product in a single call to FuelWatch's
+    /api/sites endpoint, using the daily cache. The new API returns every
+    station statewide for the given fuel type, so one call covers everything —
+    endpoints then just filter by distance. Only calls FuelWatch when this
+    product isn't already cached for the current FuelWatch day."""
     global _price_cache, _price_cache_day
     day = _fuelwatch_day()
     if day != _price_cache_day:
         # New FuelWatch day — drop the old cache.
         _price_cache = {}
         _price_cache_day = day
-    key = (day, product, suburb)
+    key = (day, product, "all")
     if key in _price_cache:
         return _price_cache[key]
-    r = await _get(FUELWATCH, params={"Product": product, "Suburb": suburb, "Surrounding": "yes"})
-    stations = _parse_stations(r.text)
+    fuel_type = PRODUCT_TO_FUELTYPE.get(product, "ULP")
+    r = await _get(FUELWATCH, params={"fuelType": fuel_type})
+    try:
+        data = r.json()
+    except Exception:
+        data = []
+    stations = _parse_stations_json(data if isinstance(data, list) else [])
     _price_cache[key] = stations
     return stations
 
@@ -393,14 +448,19 @@ async def geocode(suburb: str):
     if len(q) < 2 or len(q) > 60:
         raise HTTPException(404, f'Please enter a valid WA suburb or town.')
 
-    r = await _get(f"{NOMINATIM}/search",
-                   params={
-                       "format": "json",
-                       "q": f"{q}, Western Australia, Australia",
-                       "limit": 5,
-                       "addressdetails": 1,
-                   })
-    data = r.json()
+    try:
+        r = await _get(f"{NOMINATIM}/search",
+                       params={
+                           "format": "json",
+                           "q": f"{q}, Western Australia, Australia",
+                           "limit": 5,
+                           "addressdetails": 1,
+                       })
+        data = r.json()
+    except (httpx.HTTPError, ValueError):
+        # Nominatim rate-limited or unavailable — return a clear, retryable error
+        # rather than a raw 500.
+        raise HTTPException(503, "Location lookup is busy right now. Please try again in a moment.")
     if not data:
         raise HTTPException(404, f'Could not find "{q}" in WA. Try a nearby suburb or town.')
 
@@ -438,11 +498,17 @@ async def geocode(suburb: str):
 
 @app.get("/api/reverse")
 async def reverse(lat: float, lng: float):
-    r = await _get(f"{NOMINATIM}/reverse",
-                   params={"format": "json", "lat": lat, "lon": lng, "zoom": 14})
-    a = r.json().get("address", {})
-    suburb = (a.get("suburb") or a.get("town") or a.get("city")
-              or a.get("village") or a.get("municipality") or "")
+    # Reverse-geocode via Nominatim, but never let its failures (rate limits,
+    # timeouts, non-JSON) crash the request — a missing suburb name shouldn't
+    # break the app, since searches work from coordinates anyway.
+    try:
+        r = await _get(f"{NOMINATIM}/reverse",
+                       params={"format": "json", "lat": lat, "lon": lng, "zoom": 14})
+        a = r.json().get("address", {})
+        suburb = (a.get("suburb") or a.get("town") or a.get("city")
+                  or a.get("village") or a.get("municipality") or "")
+    except (httpx.HTTPError, ValueError, KeyError):
+        suburb = ""
     return {"suburb": suburb}
 
 
@@ -454,41 +520,22 @@ async def fuel(
     lng: float | None = None,
 ):
     """
-    Fetch FuelWatch prices for a suburb. FuelWatch's per-suburb feed can be thin
-    or empty for some fuels (diesel especially) even when stations exist nearby,
-    so if the suburb yields too few results and coordinates are supplied, we pool
-    results from the several nearest anchor suburbs and merge them.
+    Fetch FuelWatch prices near a suburb. Uses the statewide /api/sites feed
+    (one cached call returns every station for the fuel type), then sorts by
+    distance from the supplied coordinates, or by price if none are given.
     """
     try:
-        stations = await _fetch_stations(product, suburb)
+        stations = await _fetch_all_stations(product)
     except httpx.HTTPError as e:
         raise HTTPException(502, f"FuelWatch request failed: {e}")
 
-    used_fallback = None
-    # Trigger the wider pooled search when the direct suburb is thin (0-2 results).
-    if len(stations) < 3 and lat is not None and lng is not None:
-        anchors = _nearest_anchors(lat, lng, n=6)
-        results = await asyncio.gather(
-            *[_fetch_stations(product, a[0]) for a in anchors],
-            return_exceptions=True,
-        )
-        pooled = list(stations)
-        for r in results:
-            if isinstance(r, list):
-                pooled.extend(r)
-        merged = _dedupe(pooled)
-        if len(merged) > len(stations):
-            used_fallback = anchors[0][0]
-            stations = merged
-
     # Sort by distance from the user if we have coords, else by price.
     if lat is not None and lng is not None:
-        stations.sort(key=lambda s: _haversine(lat, lng, s["lat"], s["lng"]))
+        stations = sorted(stations, key=lambda s: _haversine(lat, lng, s["lat"], s["lng"]))
     else:
-        stations.sort(key=lambda s: s["price"])
+        stations = sorted(stations, key=lambda s: s["price"])
 
-    return {"stations": stations, "searchedSuburb": used_fallback or suburb,
-            "fallbackUsed": used_fallback is not None}
+    return {"stations": stations, "searchedSuburb": suburb, "fallbackUsed": False}
 
 
 @app.get("/api/fuel-metro")
@@ -499,56 +546,36 @@ async def fuel_metro(
     radius_km: float = Query(20.0, gt=0, le=200),
 ):
     """
-    Area-wide search that scales from metro to regional WA. Rather than querying
-    every anchor in the state on each request, it queries only the anchors whose
-    own location is within (radius + buffer) of the user, plus always the few
-    nearest anchors so a remote user (e.g. Esperance) still gets their local town
-    even if it sits just outside the radius buffer. Results are pooled, deduped,
-    annotated with distance, and filtered to radius_km. If nothing falls within
-    the radius, it returns the single nearest station found so the user isn't
-    dead-ended — flagged so the frontend can note it's beyond their radius.
+    Area-wide search across all of WA. Fetches every station for the fuel type
+    in one cached call, annotates each with distance from the user, and returns
+    those within radius_km (sorted nearest first). If nothing falls within the
+    radius, returns the nearest few so the user isn't dead-ended — flagged so the
+    frontend can note they're beyond the chosen radius.
     """
-    # Query by FuelWatch REGION rather than individual suburbs. Each region call
-    # returns every station in that whole area, so this gives complete coverage
-    # of FuelWatch's footprint. We query the nearest regions to the user; a wide
-    # radius pulls in more neighbouring regions.
-    n_regions = 2
-    if radius_km > 40:
-        n_regions = 3
-    if radius_km > 100:
-        n_regions = 5
-    regions = _nearest_regions(lat, lng, n=n_regions)
+    try:
+        merged = await _fetch_all_stations(product)
+    except httpx.HTTPError as e:
+        raise HTTPException(502, f"FuelWatch request failed: {e}")
 
-    results = await asyncio.gather(
-        *[_fetch_region(product, r[0]) for r in regions],
-        return_exceptions=True,
-    )
-    pooled = []
-    for r in results:
-        if isinstance(r, list):
-            pooled.extend(r)
-    merged = _dedupe(pooled)
-
-    # Annotate every station with distance from the user.
+    # Annotate every station with distance from the user (work on copies so the
+    # cached list isn't mutated).
+    annotated = []
     for s in merged:
-        s["distanceKm"] = round(_haversine(lat, lng, s["lat"], s["lng"]), 2)
-    merged.sort(key=lambda s: s["distanceKm"])
+        annotated.append({**s, "distanceKm": round(_haversine(lat, lng, s["lat"], s["lng"]), 2)})
+    annotated.sort(key=lambda s: s["distanceKm"])
 
-    within = [s for s in merged if s["distanceKm"] <= radius_km]
+    within = [s for s in annotated if s["distanceKm"] <= radius_km]
 
     beyond_radius = False
-    if not within and merged:
-        # Nothing inside the radius — hand back the nearest so the user still
-        # gets something, flagged as beyond their chosen radius.
-        within = merged[:5]
+    if not within and annotated:
+        within = annotated[:5]
         beyond_radius = True
 
     return {
         "stations": within,
         "radiusKm": radius_km,
-        "totalFound": len(merged),
-        "withinRadius": len([s for s in merged if s["distanceKm"] <= radius_km]),
-        "regionsQueried": [r[1] for r in regions],
+        "totalFound": len(annotated),
+        "withinRadius": len([s for s in annotated if s["distanceKm"] <= radius_km]),
         "beyondRadius": beyond_radius,
     }
 
@@ -611,29 +638,15 @@ async def fuel_route(
         # Fallback: straight line between endpoints as a crude 2-point route.
         route_coords = [[f_lng, f_lat], [t_lng, t_lat]]
 
-    # 2. Sample points along the route.
+    # 2. Sample points along the route (used only for the detour calc below).
     samples = _sample_route(route_coords, interval_km=25.0)
 
-    # 3. For each sample, find the nearest FuelWatch regions to query. Pool the
-    #    region set (deduped) so a route passing through an area only queries it
-    #    once. Region queries return every station in the area, giving complete
-    #    coverage along the whole corridor.
-    region_ids = {}
-    for lng, lat in samples:
-        for r in _nearest_regions(lat, lng, n=2):
-            region_ids[r[0]] = r[1]
-    # Safety cap so a very long cross-state route stays bounded.
-    region_items = list(region_ids.items())[:20]
-
-    results = await asyncio.gather(
-        *[_fetch_region(product, rid) for rid, _ in region_items],
-        return_exceptions=True,
-    )
-    pooled = []
-    for r in results:
-        if isinstance(r, list):
-            pooled.extend(r)
-    merged = _dedupe(pooled)
+    # 3. Fetch every WA station for this fuel in one cached call, then keep only
+    #    those close to the route.
+    try:
+        merged = await _fetch_all_stations(product)
+    except httpx.HTTPError as e:
+        raise HTTPException(502, f"FuelWatch request failed: {e}")
 
     # 4. Keep only stations within max_detour_km of the route, and compute the
     #    real trip cost for each.
@@ -663,7 +676,7 @@ async def fuel_route(
         "totalFound": len(on_route),
         "routeKm": round(total_km, 1),
         "samplePoints": len(samples),
-        "regionsQueried": len(region_items),
+        "stationsScanned": len(merged),
         "maxDetourKm": max_detour_km,
         "estimatedRoute": estimated,
     }
